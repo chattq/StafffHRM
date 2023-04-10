@@ -29,6 +29,7 @@ export const FormItemContainer = styled.div`
 
   & .form-item-container__control {
     display: flex;
+    justify-content: space-between;
     flex-wrap: wrap;
     overflow-x: clip;
     overflow-y: visible;
@@ -37,6 +38,7 @@ export const FormItemContainer = styled.div`
       width: 100%;
     }
     & .separate {
+      left: -9px !important;
       height: 1px;
       display: block;
       text-align: center;

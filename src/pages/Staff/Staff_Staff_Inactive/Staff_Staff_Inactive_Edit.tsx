@@ -158,8 +158,6 @@ const Staff_Staff_Inactive_Edit: FC<Props> = ({ onSuccess, uuid }: Props) => {
         HistDate: formValue.HistDate ? convertDate(formValue.HistDate) : "",
       };
 
-      console.log("condition ", condition);
-
       staff_service.addInactiveStaff(condition).then((resp: any) => {
         if (resp.Success) {
           toast.success(_t("Add SuccessFully"));
@@ -196,8 +194,7 @@ const Staff_Staff_Inactive_Edit: FC<Props> = ({ onSuccess, uuid }: Props) => {
       backdrop="static"
       className="modal-container"
       open={open}
-      onClose={handleClose}
-    >
+      onClose={handleClose}>
       <Modal.Header>
         <Modal.Title>{_l("Inactive")}</Modal.Title>
       </Modal.Header>

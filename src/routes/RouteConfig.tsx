@@ -12,6 +12,7 @@ export interface RouteItem {
   permissions?: string;
   getPageElement: Function;
   childrenOf?: string;
+  checkSideBar?: Boolean;
 }
 
 export const RouteList: RouteItem[] = [

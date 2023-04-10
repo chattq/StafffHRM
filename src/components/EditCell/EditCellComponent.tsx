@@ -20,17 +20,14 @@ function EditComponent(
           <Icon
             className="listEdit__item listEdit__item--edit"
             onClick={() => handleEdit(data)}
-            as={BiEditAlt}
-          ></Icon>
+            as={BiEditAlt}></Icon>
         </PermissionContainer>
         <PermissionContainer
-          permission={permissionDelete ? permissionDelete : ""}
-        >
+          permission={permissionDelete ? permissionDelete : ""}>
           <Icon
             className="listEdit__item listEdit__item--delete"
             onClick={() => handleDeleteSingle(data)}
-            as={FiTrash}
-          ></Icon>
+            as={FiTrash}></Icon>
         </PermissionContainer>
         {custom}
       </div>

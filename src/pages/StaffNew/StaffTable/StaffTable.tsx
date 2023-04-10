@@ -31,7 +31,6 @@ import { convertDate } from "utils/date";
 import useSelectListResignReason from "hooks/Select/useSelectListResignReason";
 import staff_service from "services/Staff/staff_service";
 import Avatar from "components/Avatar";
-import Staff_Staff_Inactive_Edit from "./Staff_Staff_Inactive_Edit";
 import { Link } from "react-router-dom";
 
 type Props = {
@@ -41,9 +40,9 @@ type Props = {
   HistDateTo: Date;
 };
 
-function Staff_Staff_Inactive() {
+function StaffTable() {
   const formRef: any = useRef();
-  const _l = useLocalization("Staff_Staff_Inactive");
+  const _l = useLocalization("StaffTable");
   const _t = useLocalization("toast");
   const _m = useLocalization("More");
   const _b = useLocalization("Button");
@@ -53,23 +52,15 @@ function Staff_Staff_Inactive() {
   const windowSize = useWindowSize();
   const { OrgId } = store.getState().orgInfo;
   const [currentCode, setCurrentCode] = useState((<></>) as ReactNode);
-  const [condition, setCondition] = useState(
-    {} as {
-      ReasonID: string;
-      DepartmentCode: string;
-      HistDateFrom: string;
-      HistDateTo: string;
-    }
-  );
   const [loading, setLoading] = useState("");
   const [formValidate, setFormValidate] = useState({} as Props);
   const [paramValue, setParamValue] = useState({} as any);
 
-  const handleAdd = () => {
-    setCurrentCode(
-      <Staff_Staff_Inactive_Edit uuid={uuid()} onSuccess={reloading} />
-    );
-  };
+  // const handleAdd = () => {
+  //   setCurrentCode(
+  //     <Staff_Staff_Inactive_Edit uuid={uuid()} onSuccess={reloading} />
+  //   );
+  // };
 
   const reloading = () => {
     setLoading(uuid());
@@ -96,15 +87,21 @@ function Staff_Staff_Inactive() {
       resizable: true,
       cell: (dataRow: any) => (
         <>
-          <Avatar
-            className="mr-2"
-            circle
-            src={dataRow.AvatarUrl ? dataRow.AvatarUrl : dataRow.AvatarUrl}
-            text={`${
-              dataRow.AvatarUrl ? dataRow.AvatarUrl : dataRow.StaffName
-            }`}
-          />
-          {dataRow.StaffName}
+          <Link
+            to={`/StaffNew/${dataRow.StaffCode}/chitiet`}
+            style={{ textDecoration: "none" }}>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <Avatar
+                className="mr-2"
+                circle
+                src={dataRow.AvatarUrl ? dataRow.AvatarUrl : dataRow.AvatarUrl}
+                text={`${
+                  dataRow.AvatarUrl ? dataRow.AvatarUrl : dataRow.StaffName
+                }`}
+              />
+              <div className="name_staff">{dataRow.StaffName}</div>
+            </div>
+          </Link>
         </>
       ),
     },
@@ -133,17 +130,38 @@ function Staff_Staff_Inactive() {
       resizable: true,
     },
     {
-      key: "HistDate", // Ngày tạm dừng
-      label: _l("HistDate"),
+      key: "StaffStatus", // Trạng thái hoạt động
+      label: _l("Trạng Thái"),
       width: 200,
       resizable: true,
       cansort: true,
-    },
-    {
-      key: "ReasonDesc", // Lý do
-      label: _l("ReasonDesc"),
-      width: 200,
-      resizable: true,
+      cell: (dataRow: any) => (
+        <>
+          {dataRow.StaffStatus === "ACTIVE" ? (
+            <span
+              style={{
+                padding: "6px 10px 6px 10px",
+                background: "green",
+                color: "white",
+                borderRadius: "6px",
+                fontWeight: "600",
+              }}>
+              {_l("Đang làm việc")}
+            </span>
+          ) : (
+            <span
+              style={{
+                padding: "6px 10px 6px 10px",
+                background: "orange",
+                color: "white",
+                borderRadius: "6px",
+                fontWeight: "600",
+              }}>
+              {_l("Đã nghỉ việc")}
+            </span>
+          )}
+        </>
+      ),
     },
   ];
   const fetchData = async ({
@@ -158,19 +176,13 @@ function Staff_Staff_Inactive() {
     sortDir: string;
   }) => {
     const param = {
-      ...condition,
       KeyWord: keyword,
       Ft_PageIndex: page - 1,
       Ft_PageSize: limit,
-      sortColumn: sortBy,
-      sortBy: sortDir,
-      FlagActive: "0",
-      StaffStatus: "INACTIVE",
     };
-
     setParamValue(param);
 
-    const resp = await staff_service.searchInactive(param);
+    const resp = await staff_service.search(param);
     if (resp.Success) {
       const data = resp.Data.DataList;
       if (data) {
@@ -262,7 +274,7 @@ function Staff_Staff_Inactive() {
                 ? convertDate(formValidate.HistDateTo)
                 : "",
             };
-            setCondition(changing);
+
             reloading();
             onClose();
           }}>
@@ -309,8 +321,8 @@ function Staff_Staff_Inactive() {
             keyword={keyword}
             setKeyword={setKeyword}
             reloading={reloading}
-            handleAdd={handleAdd}
-            title="Staff_Staff_Inactive"
+            // handleAdd={handleAdd}
+            title=""
             listMore={listMore}
           />
           <Content>
@@ -330,4 +342,4 @@ function Staff_Staff_Inactive() {
   );
 }
 
-export default Staff_Staff_Inactive;
+export default StaffTable;

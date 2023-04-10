@@ -34,8 +34,7 @@ const ModalFooterComponent: FC<Props> = ({
         <Button
           onClick={onAdd ? onAdd : () => {}}
           appearance="primary"
-          color="green"
-        >
+          color="green">
           {_l("Add")}
         </Button>
       );
@@ -44,7 +43,7 @@ const ModalFooterComponent: FC<Props> = ({
     case "detail": {
       current = onChangeToUpdate ? (
         <Button onClick={onChangeToUpdate} appearance="primary" color="green">
-          {_l("edit")}
+          {_l("Edit")}
         </Button>
       ) : (
         <></>
@@ -56,9 +55,8 @@ const ModalFooterComponent: FC<Props> = ({
         <Button
           onClick={onUpdate ? onUpdate : () => {}}
           appearance="primary"
-          color="green"
-        >
-          {_l("save")}
+          color="green">
+          {_l("Lưu")}
         </Button>
       );
       break;
@@ -68,8 +66,7 @@ const ModalFooterComponent: FC<Props> = ({
         <Button
           onClick={onDelete ? onDelete : () => {}}
           appearance="primary"
-          color="green"
-        >
+          color="green">
           {_l("delete")}
         </Button>
       );
@@ -80,8 +77,7 @@ const ModalFooterComponent: FC<Props> = ({
         <Button
           onClick={onCustom ? onCustom : () => {}}
           appearance="primary"
-          color="green"
-        >
+          color="green">
           {_l(`${labelCustom ? labelCustom : ""}`)}
         </Button>
       );
@@ -97,7 +93,7 @@ const ModalFooterComponent: FC<Props> = ({
         <Stack spacing={10}>
           {current}
           <Button appearance="default" onClick={onClose}>
-            {_l("Close")}
+            {_l("Hủy")}
           </Button>
         </Stack>
       </Stack>

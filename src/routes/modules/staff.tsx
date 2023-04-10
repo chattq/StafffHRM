@@ -2,6 +2,8 @@ import Staff_Discipline from "pages/Staff/Staff_Discipline/Staff_Discipline";
 import Staff_Reward from "pages/Staff/Staff_Reward/staff_reward";
 import Staff_Staff_Inactive from "pages/Staff/Staff_Staff_Inactive/Staff_Staff_inactive";
 import Staff_Staff_Pause from "pages/Staff/Staff_Staff_Pause/Staff_Staff_Pause";
+import StaffInforFull from "pages/StaffNew/StaffInfor/StaffInforFull";
+import StaffTable from "pages/StaffNew/StaffTable/StaffTable";
 import { RouteItem } from "routes/RouteConfig";
 
 export const staff: RouteItem[] = [
@@ -60,6 +62,20 @@ export const staff: RouteItem[] = [
     permissions: "",
     getPageElement: () => {
       return <Staff_Discipline />; // chưa xong
+    },
+  },
+
+  // tạo mới dự án
+  {
+    path: "/StaffNew",
+    mainMenuTitle: "Nhân sự",
+    mainMenuKey: "",
+    subMenuKey: "",
+    subMenuTitle: "",
+    permissions: "",
+    checkSideBar: false,
+    getPageElement: () => {
+      return <StaffTable />; // chưa xong
     },
   },
   // Thiếp lập

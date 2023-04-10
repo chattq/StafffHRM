@@ -16,10 +16,17 @@ import PrivateRoute from "routes/PrivateRoute";
 import PublicRoute from "routes/PublicRoute";
 import { RouteList } from "routes/RouteConfig";
 import { v4 as uuid } from "uuid";
-import StaffInfor from "pages/StaffInfor/StaffInfor";
+import StaffInfor from "pages/StaffNew/StaffInfor/StaffInfor";
+import StaffInforFull from "pages/StaffNew/StaffInfor/StaffInforFull";
+import StaffAppoint from "pages/StaffNew/StaffAppoint/StaffAppoint";
+import StaffInforEdit from "pages/StaffNew/StaffInfor/StaffInforEdit";
+import StaffLaborContract from "pages/StaffNew/StaffLaborContract/StaffLaborContract";
+import StaffExp from "pages/StaffNew/StaffExp/StaffExp";
+import StaffTrain from "pages/StaffNew/StaffTrain/StaffTrain";
 const App = () => {
   const windowSize = useWindowSize();
   const screenSize = useSelector((state: any) => state.ui.screenSize);
+  const checkEdit = useSelector((state: any) => state.ui.checkEdit);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -45,8 +52,29 @@ const App = () => {
 
         <Route path="/" element={<PrivateRoute />}>
           <Route path="/" element={<Main />}>
-            <Route path="/staffInfor/:staffCode" element={<StaffInfor />} />
             <Route path="*" element={<Page404 />} />
+            <Route path="/StaffNew/:staffCode" element={<StaffInfor />}>
+              <Route
+                path="/StaffNew/:staffCode/chitiet"
+                element={checkEdit ? <StaffInforEdit /> : <StaffInforFull />}
+              />
+              <Route
+                path="/StaffNew/:staffCode/appoint"
+                element={<StaffAppoint />}
+              />
+              <Route
+                path="/StaffNew/:staffCode/labor"
+                element={<StaffLaborContract />}
+              />
+              <Route
+                path="/StaffNew/:staffCode/Experience"
+                element={<StaffExp />}
+              />
+              <Route
+                path="/StaffNew/:staffCode/Train"
+                element={<StaffTrain />}
+              />
+            </Route>
 
             {RouteList.map((item) => {
               let page: any =

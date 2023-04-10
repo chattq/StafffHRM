@@ -23,8 +23,7 @@ import { clearSavingData, loadData } from "store/reducers/localization";
 import store from "store/store";
 import { ContainerWrapper } from "../../styled";
 const Main = () => {
-  const { networkId, staffCode } = useParams();
-  console.log(27, staffCode);
+  const { networkId } = useParams();
   const dispatch = useDispatch();
   // const menuSidebarCollapsed = useSelector(
   //   (state: any) => state.ui.menuSidebarCollapsed
@@ -160,7 +159,6 @@ const Main = () => {
       //removeWindowClass('sidebar-mini');
     };
   }, []);
-
   useEffect(() => {
     let currentRoute = RouteList.find((r) => curLoc.equalPath(r.path));
     if (currentRoute) {
@@ -224,19 +222,16 @@ const Main = () => {
     return (
       <>
         <Header mainMenuKey={mainMenuKey} />
-        {!staffCode ? (
-          <section className="content">
-            <div className="sidebar-page">
-              <section className="content">
-                <Container>
-                  <Outlet />
-                </Container>
-              </section>
-            </div>
-          </section>
-        ) : (
-          <Outlet />
-        )}
+        <section className="content">
+          <div className="sidebar-page">
+            <section className="content">
+              <Container>
+                <Outlet />
+              </Container>
+            </section>
+          </div>
+        </section>
+
         {/* <MenuSidebar /> */}
         {/* <div className="content-wrapper">
           <div className="pt-3" />

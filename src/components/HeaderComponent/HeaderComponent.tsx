@@ -42,8 +42,7 @@ function HeaderComponent(props: Props) {
     <HeaderContainer>
       <Header
         className="page-header"
-        style={{ width: "100%", padding: "5px 10px" }}
-      >
+        style={{ width: "100%", padding: "5px 10px" }}>
         <Grid fluid>
           <Row className="d-flex align-items-center">
             <Col md={8}>
@@ -75,15 +74,13 @@ function HeaderComponent(props: Props) {
                     <PermissionContainer
                       permission={`${
                         props?.permission ? props.permission : ""
-                      }`}
-                    >
+                      }`}>
                       <Button
                         color="green"
                         size="sm"
                         appearance="primary"
                         onClick={props.handleAdd}
-                        className="header-button"
-                      >
+                        className="header-button">
                         <Icon as={BsPlusCircle} className="mr-1" />
                         <span>
                           {_l(
