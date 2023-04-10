@@ -353,8 +353,7 @@ const Staff_Reward_Edit: FC<Props> = ({
       className="modal-container"
       open={open}
       onClose={handleClose}
-      size={flagProps === "delete" ? "sm" : "sm"}
-    >
+      size={flagProps === "delete" ? "sm" : "sm"}>
       <TitleComponent flag={flagProps} text={_l("Staff_Reward")} />
       <Modal.Body>{body()}</Modal.Body>
       <ModalFooterComponent

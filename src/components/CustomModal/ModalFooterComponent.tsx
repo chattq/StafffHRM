@@ -3,7 +3,7 @@ import { FC, memo, MouseEventHandler, ReactNode } from "react";
 import { Button, Modal, Stack } from "rsuite";
 
 type Props = {
-  flag: string;
+  flag: any;
   onClose: MouseEventHandler;
   onUpdate?: MouseEventHandler;
   onAdd?: MouseEventHandler;
@@ -67,7 +67,7 @@ const ModalFooterComponent: FC<Props> = ({
           onClick={onDelete ? onDelete : () => {}}
           appearance="primary"
           color="green">
-          {_l("delete")}
+          {_l("Delete")}
         </Button>
       );
       break;

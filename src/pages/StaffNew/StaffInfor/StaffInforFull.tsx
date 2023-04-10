@@ -16,7 +16,6 @@ export default function StaffInforFull() {
   const data = useSelector((state: any) => state.ui.data);
   const { staffCode } = useParams();
   const [dataFamily, setDataFamily] = useState([]);
-  // console.log(7, data);
   const fetchDataFamily = async () => {
     const resp = await Mst_RelativeInfo_service.GetByStaffCode(
       staffCode as string
@@ -113,11 +112,11 @@ export default function StaffInforFull() {
               ) : data?.Staff_MapDepartment?.length === 0 ? (
                 <p>---</p>
               ) : (
-                data?.Staff_MapDepartment?.map((item: any) => {
+                data?.Staff_MapDepartment?.map((item: any, index: number) => {
                   if (item?.md_DepartmentName !== null) {
-                    return <p>{item?.md_DepartmentName}</p>;
+                    return <p key={index}>{item?.md_DepartmentName}</p>;
                   } else {
-                    return <p>---</p>;
+                    return <p key={index}>---</p>;
                   }
                 })
               )}
@@ -267,7 +266,6 @@ export default function StaffInforFull() {
             ]}
             inforLabor={dataThFamily()}
             data={dataFamily}
-            title={""}
           />
         </div>
       </div>

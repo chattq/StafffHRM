@@ -2,12 +2,8 @@ import ModalFooterComponent from "components/CustomModal/ModalFooterComponent";
 import { ShowError } from "components/Dialogs/Dialogs";
 import FormValidate from "components/FormValidate/FormValidate";
 import { Textarea } from "components/input/Textarea";
-import useSelectListDepartment from "hooks/Select/useSelectListDepartment";
-import useSelectListPosition from "hooks/Select/useSelectListPosition";
-import useSelectListResignReason from "hooks/Select/useSelectListResignReason";
-import useSelectListStaff from "hooks/Select/useSelectListStaff";
 import { useLocalization } from "hooks/useLocalization";
-import React, { memo, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Modal, DatePicker } from "rsuite";
@@ -18,38 +14,39 @@ import { dateRequiredRule, requiredRule } from "utils/validationRules";
 export default function ModalStaffEdit({
   button,
   onSuccess,
+  data,
+  flag,
+  uuid,
 }: {
-  button: any;
-  onSuccess: any;
+  button?: any;
+  onSuccess?: any;
+  data?: any;
+  flag?: string;
+  uuid?: string;
 }) {
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   const formRef: any = useRef(null);
   const _l = useLocalization("ModalStaffEdit");
   const _t = useLocalization("toast");
   const _p = useLocalization("Placeholder");
   const [formValue, setFormValue] = useState({} as any);
-  const selectListStaff = useSelectListStaff();
-  const selectListDepartment = useSelectListDepartment();
-  const selectListPosition = useSelectListPosition();
-  const selectListResignReason = useSelectListResignReason();
-
-  const listStaff = selectListStaff.map((item: any) => {
-    return {
-      label: item.StaffFullName,
-      value: item.StaffCode,
-      department: item.DepartmentCode,
-      position: item.PositionCode,
-    };
-  });
+  const [flagProps, setFlagProps] = useState(flag);
+  const { staffCode } = useParams();
+  const [open, setOpen] = useState(false);
+  useEffect(() => {
+    setFlagProps(flag as string);
+  }, [uuid, flag]);
+  const handleOpen = () => {
+    setFlagProps("update");
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setFormValue({} as any);
+    setOpen(false);
+  };
 
   const listFormItem: any[] = [
     {
-      label: _l("Thời gian"), // Tổ chức
+      label: _l("Thời gian"), // Th
       required: true,
       control: [
         {
@@ -69,7 +66,7 @@ export default function ModalStaffEdit({
       ],
     },
     {
-      label: _l("Công ty"), // Mã nhân viên
+      label: _l("Công ty"), // công ty
       required: true,
       control: [
         {
@@ -79,7 +76,7 @@ export default function ModalStaffEdit({
       ],
     },
     {
-      label: _l("Vị trí"), // Mã nhân viên
+      label: _l("Vị trí"), // vị trí
       required: true,
       control: [
         {
@@ -90,10 +87,9 @@ export default function ModalStaffEdit({
       ],
     },
     {
-      label: _l("Kinh nghiệm làm việc"), // Mã nhân viên
+      label: _l("Kinh nghiệm làm việc"), // kinh nghiệm làm việc
       control: [
         {
-          rule: requiredRule,
           name: "WorkExperience",
           accepter: Textarea,
           placeholder: _p("Nhập"),
@@ -101,60 +97,101 @@ export default function ModalStaffEdit({
       ],
     },
   ];
-  const { staffCode } = useParams();
 
   const handleSubmit = () => {
-    if (!formRef.current.check || !formRef.current) {
-      return;
-    }
-    if (!formRef.current.check()) {
-      return;
-      //   "StaffCode": "STAFF.C3C.00216",
-    } else {
-      const condition = {
-        StaffCode: staffCode,
-        DateForm: formValue.DateForm ? convertDate(formValue.DateForm) : "",
-        Company: formValue.Company ? formValue.Company : "",
-        Position: formValue.Position ? formValue.Position : "",
-        WorkExperience: formValue.WorkExperience
-          ? formValue.WorkExperience
-          : "",
-        DateTo: formValue.DateTo ? convertDate(formValue.DateTo) : "",
-      };
-
-      console.log("condition ", condition);
-
-      Staff_WorkExperience_service.Create(condition).then((resp: any) => {
+    if (flag === "delete") {
+      Staff_WorkExperience_service.Remove({
+        StaffCode: data.StaffCode,
+        Idx: data.Idx,
+      }).then((resp: any) => {
         if (resp.Success) {
-          toast.success(_t("Add SuccessFully"));
+          toast.success(_t("Delete success !"));
           onSuccess();
-          setFormValue({});
           handleClose();
         } else {
           ShowError(resp.ErrorData);
         }
       });
+    } else {
+      if (!formRef.current.check || !formRef.current) {
+        return;
+      }
+      if (!formRef.current.check()) {
+        return;
+      } else {
+        const condition = {
+          StaffCode: staffCode ? staffCode : "",
+          Idx: formValue.Idx ? formValue.Idx : "",
+          DateForm: formValue.DateForm ? convertDate(formValue.DateForm) : "",
+          Company: formValue.Company ? formValue.Company : "",
+          Position: formValue.Position ? formValue.Position : "",
+          WorkExperience: formValue.WorkExperience
+            ? formValue.WorkExperience
+            : "",
+          DateTo: convertDate(formValue.DateTo)
+            ? convertDate(formValue.DateTo)
+            : "",
+        };
+
+        if (flagProps === "update") {
+          Staff_WorkExperience_service.Create(condition).then((resp: any) => {
+            if (resp.Success) {
+              toast.success(_t("Add SuccessFully"));
+              onSuccess();
+              setFormValue({});
+              handleClose();
+            } else {
+              ShowError(resp.ErrorData);
+            }
+          });
+        }
+        if (flag === "detail") {
+          console.log(condition);
+          Staff_WorkExperience_service.Update(condition).then((resp: any) => {
+            if (resp.Success) {
+              toast.success(_t("Update SuccessFully"));
+              onSuccess();
+              handleClose();
+            } else {
+              ShowError(resp.ErrorData);
+            }
+          });
+        }
+      }
     }
   };
 
-  const body = () => {
-    return (
-      <FormValidate
-        ref={formRef}
-        formValue={formValue}
-        setFormValue={setFormValue}
-        layout="vertical"
-        listItem={listFormItem}
-      />
-    );
+  const render = () => {
+    if (data) {
+      setFormValue({
+        StaffCode: staffCode,
+        Idx: data.Idx,
+        DateForm: new Date(data.DateForm),
+        DateTo: new Date(data.DateTo),
+        Company: data.Company,
+        Position: data.Position,
+        WorkExperience: data.WorkExperience,
+      });
+    }
   };
-
-  //   useEffect(() => {
-  //     setOpen(false);
-  //     return () => {
-  //       setFormValue({});
-  //     };
-  //   }, [uuid]);
+  useEffect(() => {
+    render();
+  }, [flag, uuid]);
+  const body = () => {
+    if (flag === "delete") {
+      return <strong className="delete-text">{_t("Bạn có muốn xóa?")}</strong>;
+    } else {
+      return (
+        <FormValidate
+          ref={formRef}
+          formValue={formValue}
+          setFormValue={setFormValue}
+          layout="vertical"
+          listItem={listFormItem}
+        />
+      );
+    }
+  };
 
   return (
     <>
@@ -163,13 +200,12 @@ export default function ModalStaffEdit({
         <Modal.Header>
           <Modal.Title>Modal Title</Modal.Title>
         </Modal.Header>
-
         <Modal.Body>{body()}</Modal.Body>
-
         <ModalFooterComponent
           onUpdate={handleSubmit}
           onDelete={handleSubmit}
-          flag="update"
+          onChangeToUpdate={handleSubmit}
+          flag={flagProps}
           onClose={handleClose}
         />
       </Modal>

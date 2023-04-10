@@ -14,12 +14,11 @@ export default function StaffInfor() {
   const dispatch = useDispatch();
   const fetchData = async () => {
     const resp = await staff_service.getByStaffCode(staffCode as string);
-    setDataStaff(resp.Data.Staff_Staff);
-    setDataStaffDPM(resp.Data.Staff_MapDepartment);
+    setDataStaff(resp.Data?.Staff_Staff);
+    setDataStaffDPM(resp.Data?.Staff_MapDepartment);
     dispatch(setData(resp.Data));
     return resp;
   };
-
   const [check, setCheck] = useState(true);
   const handleChangeEdit = () => {
     setCheck(false);
@@ -32,7 +31,9 @@ export default function StaffInfor() {
   }, []);
   return (
     <>
-      {dataStaff && (
+      {dataStaff === undefined ? (
+        <div>Không có dữ liệu</div>
+      ) : (
         <div style={{ width: "100%", background: "#f6f6f6" }}>
           <div
             style={{

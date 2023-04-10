@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import Staff_WorkExperience_service from "services/Staff/Staff_WorkExperience_service";
+import { v4 as uuid } from "uuid";
 
 interface Exp {
   DateForm?: string;
@@ -16,8 +17,11 @@ interface Exp {
 
 export default function StaffExp() {
   const { staffCode } = useParams();
-
+  const [flag, setFlag] = useState("");
   const [dataExp, setDataExp] = useState([]);
+  const [id, setId] = useState("");
+  const [dataEdit, setDataEdit] = useState([]);
+
   const fetchDataExp = async () => {
     const resp = await Staff_WorkExperience_service.GetByStaffCode(
       staffCode as string
@@ -28,6 +32,18 @@ export default function StaffExp() {
   useEffect(() => {
     fetchDataExp();
   }, []);
+
+  const handleEdit = (data: any) => {
+    setFlag("detail");
+    setDataEdit(data);
+    setId(uuid());
+  };
+
+  const handleDeleteSingle = (data: any) => {
+    setFlag("delete");
+    setDataEdit(data);
+    setId(uuid());
+  };
   const checkEdit = useSelector((state: any) => state.ui.checkEdit);
   const dataThEXP = () => {
     return (
@@ -37,9 +53,17 @@ export default function StaffExp() {
             {checkEdit && (
               <td>
                 <ModalStaffEdit
-                  button={<EditComponent />}
-                  onSuccess={""}
-                  key={""}
+                  button={
+                    <EditComponent
+                      handleEdit={handleEdit}
+                      data={dataEdit}
+                      handleDeleteSingle={handleDeleteSingle}
+                    />
+                  }
+                  data={td}
+                  flag={flag}
+                  uuid={id}
+                  onSuccess={fetchDataExp}
                 />
               </td>
             )}
@@ -74,6 +98,8 @@ export default function StaffExp() {
         data={dataExp}
         title={"Thêm quá trình"}
         loading={fetchDataExp}
+        setFlag={setFlag}
+        setId={setId}
       />
     </div>
   );

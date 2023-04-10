@@ -5,14 +5,23 @@ import { BiEditAlt } from "react-icons/bi";
 import { FiTrash } from "react-icons/fi";
 import { EditComponentContainer } from "./styled";
 
-function EditComponent(
-  handleEdit: any,
-  handleDeleteSingle: any,
-  data: any,
-  permissionEdit?: string,
-  permissionDelete?: string,
-  custom?: ReactNode
-) {
+interface Props {
+  handleEdit?: any;
+  handleDeleteSingle?: any;
+  data?: any;
+  permissionEdit?: string;
+  permissionDelete?: string;
+  custom?: ReactNode;
+}
+
+function EditComponent({
+  handleEdit,
+  handleDeleteSingle,
+  data,
+  permissionEdit,
+  permissionDelete,
+  custom,
+}: Props) {
   return (
     <EditComponentContainer>
       <div className="listEdit" style={{ display: "flex" }}>
