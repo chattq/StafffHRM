@@ -161,7 +161,7 @@ export default function StaffExpEdit({
   };
 
   const render = () => {
-    if (data) {
+    if (flag === "detail") {
       setFormValue({
         StaffCode: staffCode,
         Idx: data.Idx,
