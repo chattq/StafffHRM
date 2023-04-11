@@ -4,44 +4,11 @@ import { FaUser, FaUsers } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import Mst_RelativeInfo_service from "services/Staff/Mst_RelativeInfo_service";
-
-interface Family {
-  DateOfBirth?: string;
-  Relationship?: string;
-  FullName?: string;
-  Career?: string;
-}
+import StaffInforFamily from "../StaffInforFamily/StaffInforFamily";
 
 export default function StaffInforFull() {
   const data = useSelector((state: any) => state.ui.data);
-  const { staffCode } = useParams();
-  const [dataFamily, setDataFamily] = useState([]);
-  const fetchDataFamily = async () => {
-    const resp = await Mst_RelativeInfo_service.GetByStaffCode(
-      staffCode as string
-    );
-    setDataFamily(resp.Data.Lst_Mst_RelativeInfo);
-    return resp;
-  };
-  useEffect(() => {
-    fetchDataFamily();
-  }, []);
 
-  const dataThFamily = () => {
-    return (
-      <>
-        {dataFamily?.map((td: Family, index: number) => (
-          <tr key={index}>
-            <td>{index + 1}</td>
-            <td>{td.Relationship}</td>
-            <td>{td.FullName}</td>
-            <td>{td.DateOfBirth}</td>
-            <td>{td.Career}</td>
-          </tr>
-        ))}
-      </>
-    );
-  };
   return (
     <>
       {/* thông tin cá nhân */}
@@ -231,44 +198,7 @@ export default function StaffInforFull() {
         </div>
       </div>
       {/* thông tin gia đình */}
-      <div
-        style={{
-          background: "white",
-          marginTop: "8px",
-          padding: "20px 30px 20px 30px",
-        }}>
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <div
-            style={{
-              height: "30px",
-              width: "30px",
-              background: "green",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              borderRadius: "50%",
-            }}>
-            <FaUsers style={{ color: "white" }} />
-          </div>
-          <span
-            style={{ color: "black", fontWeight: "600", marginLeft: "15px" }}>
-            Thông tin người thân
-          </span>
-        </div>
-        <div style={{ marginTop: "20px" }}>
-          <TableLabor
-            dataHeader={[
-              "STT",
-              "Quan hệ",
-              "Họ và tên",
-              "Ngày Sinh",
-              "Nghề nghiệp",
-            ]}
-            inforLabor={dataThFamily()}
-            data={dataFamily}
-          />
-        </div>
-      </div>
+      <StaffInforFamily />
     </>
   );
 }

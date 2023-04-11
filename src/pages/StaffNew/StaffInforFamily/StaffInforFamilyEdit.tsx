@@ -5,13 +5,13 @@ import { useLocalization } from "hooks/useLocalization";
 import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { DatePicker, Uploader } from "rsuite";
-import Staff_Appoint_service from "services/Staff/Staff_Appoint_service";
+import { DatePicker } from "rsuite";
 import Staff_WorkExperience_service from "services/Staff/Staff_WorkExperience_service";
 import { convertDate } from "utils/date";
 import { dateRequiredRule, requiredRule } from "utils/validationRules";
+import Mst_RelativeInfo_service from "services/Staff/Mst_RelativeInfo_service";
 
-export default function StaffAppointEdit({
+export default function StaffInforFamilyEdit({
   button,
   onSuccess,
   data,
@@ -46,29 +46,37 @@ export default function StaffAppointEdit({
   const { staffCode } = useParams();
   const listFormItem: any[] = [
     {
-      label: _l("Ngày điều động/bổ nhiệm"), // ngày điều động bổ nhiệm
+      label: _l("Thời gian"), // Th
       required: true,
       control: [
         {
           rule: dateRequiredRule,
-          name: "AppointDate",
-          placeholder: _p("Nhập ngày"),
+          name: "DateForm",
+          placeholder: _p("Từ ngày"),
           accepter: DatePicker,
+          className: "w-5",
+        },
+        {
+          rule: dateRequiredRule,
+          name: "DateTo",
+          placeholder: _p("Đến ngày"),
+          accepter: DatePicker,
+          className: "w-5",
         },
       ],
     },
     {
-      label: _l("Phòng ban"), // phòng ban
+      label: _l("Công ty"), // công ty
       required: true,
       control: [
         {
-          name: "DecisionNo",
+          name: "Company",
           placeholder: _p("Nhập"),
         },
       ],
     },
     {
-      label: _l("Chức danh"), // chức danh
+      label: _l("Vị trí"), // vị trí
       required: true,
       control: [
         {
@@ -79,59 +87,32 @@ export default function StaffAppointEdit({
       ],
     },
     {
-      label: _l("Số quyết định"), // số quyết dịnh
+      label: _l("Kinh nghiệm làm việc"), // kinh nghiệm làm việc
       control: [
         {
-          name: "Position",
-          placeholder: _p("Nhập"),
-        },
-      ],
-    },
-    {
-      label: _l("Số tham chiếu"), // số tham chiếu
-      control: [
-        {
-          name: "Position",
-          placeholder: _p("Nhập"),
-        },
-      ],
-    },
-    {
-      label: _l("Ghi chú"), // kinh nghiệm làm việc
-      control: [
-        {
-          name: "Remark",
-          placeholder: _p("Nhập"),
+          name: "WorkExperience",
           accepter: Textarea,
+          placeholder: _p("Nhập"),
         },
       ],
     },
-    // {
-    //   label: _l("Kinh nghiệm làm việc"), // kinh nghiệm làm việc
-    //   control: [
-    //     {
-    //       rule: requiredRule,
-    //       name: "Position",
-    //       placeholder: _p("Nhập"),
-    //       accepter: Uploader,
-    //     },
-    //   ],
-    // },
   ];
 
   const handleSubmit = () => {
     if (flag === "delete") {
-      Staff_Appoint_service.Delete(data.StaffAppointCodeSys).then(
-        (resp: any) => {
-          if (resp.Success) {
-            toast.success(_t("Delete success !"));
-            onSuccess();
-            handleClose();
-          } else {
-            ShowError(resp.ErrorData);
-          }
+      Mst_RelativeInfo_service.Remove({
+        StaffCode: data.StaffCode,
+        RelativeInfoID: data.RelativeInfoID,
+        OrgID: data.OrgID,
+      }).then((resp: any) => {
+        if (resp.Success) {
+          toast.success(_t("Delete success !"));
+          onSuccess();
+          handleClose();
+        } else {
+          ShowError(resp.ErrorData);
         }
-      );
+      });
     } else {
       if (!formRef.current.check || !formRef.current) {
         return;
@@ -142,10 +123,8 @@ export default function StaffAppointEdit({
         const condition = {
           StaffCode: staffCode ? staffCode : "",
           Idx: formValue.Idx ? formValue.Idx : "",
-          AppointDate: formValue.AppointDate
-            ? convertDate(formValue.AppointDate)
-            : "",
-          DecisionNo: formValue.DecisionNo ? formValue.DecisionNo : "",
+          DateForm: formValue.DateForm ? convertDate(formValue.DateForm) : "",
+          Company: formValue.Company ? formValue.Company : "",
           Position: formValue.Position ? formValue.Position : "",
           WorkExperience: formValue.WorkExperience
             ? formValue.WorkExperience
