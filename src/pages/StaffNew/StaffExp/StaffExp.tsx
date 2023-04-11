@@ -17,10 +17,11 @@ interface Exp {
 
 export default function StaffExp() {
   const { staffCode } = useParams();
-  const [flag, setFlag] = useState("");
   const [dataExp, setDataExp] = useState([]);
+  const [flag, setFlag] = useState("");
   const [id, setId] = useState("");
   const [dataEdit, setDataEdit] = useState([]);
+  const checkEdit = useSelector((state: any) => state.ui.checkEdit);
 
   const fetchDataExp = async () => {
     const resp = await Staff_WorkExperience_service.GetByStaffCode(
@@ -44,7 +45,43 @@ export default function StaffExp() {
     setDataEdit(data);
     setId(uuid());
   };
-  const checkEdit = useSelector((state: any) => state.ui.checkEdit);
+  const handleAdd = () => {
+    setFlag("update");
+    setId(uuid());
+  };
+  const buttonModal = () => {
+    return (
+      <>
+        {checkEdit && (
+          <StaffExpEdit
+            button={
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  padding: "16px 30px",
+                }}
+                onClick={handleAdd}>
+                <span
+                  style={{
+                    padding: "5px 15px",
+                    borderRadius: "4px",
+                    border: "1px solid",
+                    color: "black",
+                    cursor: "pointer",
+                    background: "#eaeaea",
+                  }}>
+                  Thêm quá trình
+                </span>
+              </div>
+            }
+            onSuccess={fetchDataExp}
+          />
+        )}
+      </>
+    );
+  };
+
   const dataThEXP = () => {
     return (
       <>
@@ -67,7 +104,6 @@ export default function StaffExp() {
                 />
               </td>
             )}
-
             <td>{td.DateTo}</td>
             <td>{td.DateForm}</td>
             <td>{td.Company}</td>
@@ -95,10 +131,8 @@ export default function StaffExp() {
         ]}
         inforLabor={dataThEXP()}
         data={dataExp}
-        title={"Thêm quá trình"}
-        loading={fetchDataExp}
-        setFlag={setFlag}
         setId={setId}
+        buttonModal={buttonModal()}
       />
     </div>
   );

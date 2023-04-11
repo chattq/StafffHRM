@@ -3,6 +3,10 @@ import React, { useEffect, useState } from "react";
 import { FaDownload } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import Staff_Appoint_service from "services/Staff/Staff_Appoint_service";
+import StaffAppointEdit from "./StaffAppointEdit";
+import { v4 as uuid } from "uuid";
+import { useSelector } from "react-redux";
+import EditComponent from "components/EditCell/EditCellComponent";
 
 interface App {
   DecisionNo?: string;
@@ -15,8 +19,11 @@ interface App {
 }
 export default function StaffAppoint() {
   const { staffCode } = useParams();
-
+  const [flag, setFlag] = useState("");
+  const [dataEdit, setDataEdit] = useState([]);
+  const [id, setId] = useState("");
   const [dataAppoint, setDataAppoint] = useState([]);
+  const checkEdit = useSelector((state: any) => state.ui.checkEdit);
   const fetchDataAppoint = async () => {
     const resp = await Staff_Appoint_service.getByCode(staffCode as string);
     setDataAppoint(resp.Data.Lst_Staff_Appoint);
@@ -25,11 +32,77 @@ export default function StaffAppoint() {
   useEffect(() => {
     fetchDataAppoint();
   }, []);
+
+  const handleEdit = (data: any) => {
+    setFlag("detail");
+    setDataEdit(data);
+    setId(uuid());
+  };
+
+  const handleDeleteSingle = (data: any) => {
+    setFlag("delete");
+    setDataEdit(data);
+    setId(uuid());
+  };
+  const handleAdd = () => {
+    setFlag("update");
+    setId(uuid());
+  };
+  const buttonModal = () => {
+    return (
+      <>
+        {checkEdit && (
+          <StaffAppointEdit
+            button={
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  padding: "16px 30px",
+                }}
+                onClick={handleAdd}>
+                <span
+                  style={{
+                    padding: "5px 15px",
+                    borderRadius: "4px",
+                    border: "1px solid",
+                    color: "black",
+                    cursor: "pointer",
+                    background: "#eaeaea",
+                  }}>
+                  Thêm điều động
+                </span>
+              </div>
+            }
+            onSuccess={fetchDataAppoint}
+          />
+        )}
+      </>
+    );
+  };
+
   const dataThApp = () => {
     return (
       <>
         {dataAppoint?.map((td: App, index: number) => (
           <tr key={index}>
+            {checkEdit && (
+              <td>
+                <StaffAppointEdit
+                  button={
+                    <EditComponent
+                      handleEdit={handleEdit}
+                      data={dataEdit}
+                      handleDeleteSingle={handleDeleteSingle}
+                    />
+                  }
+                  data={td}
+                  flag={flag}
+                  uuid={id}
+                  onSuccess={fetchDataAppoint}
+                />
+              </td>
+            )}
             <td>{td.DecisionNo}</td>
             <td>{td.ApprovalDate}</td>
             <td>{td.AppointGroup}</td>
@@ -65,7 +138,8 @@ export default function StaffAppoint() {
         ]}
         inforLabor={dataThApp()}
         data={dataAppoint}
-        title={""}
+        setId={setId}
+        buttonModal={buttonModal()}
       />
     </div>
   );
