@@ -53,8 +53,14 @@ const update = async ({ isNew, data }: UpdateInterface) => {
 
 const removeMultiple = async (data: RemoveStaffAppoint[]) => {
   const str = JSON.stringify(data);
+
   return await api.post("Staff_Appoint/DeleteMultiple", {
     strJson: str,
+  });
+};
+const Delete = async (StaffAppointCodeSys: string) => {
+  return await api.post("Staff_Appoint/Delete", {
+    StaffAppointCodeSys,
   });
 };
 
@@ -65,5 +71,6 @@ export default {
   exportExcel,
   update,
   removeMultiple,
+  Delete,
   getByStaffAppointCodeSys,
 };

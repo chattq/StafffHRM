@@ -121,15 +121,17 @@ export default function StaffAppointEdit({
 
   const handleSubmit = () => {
     if (flag === "delete") {
-      Staff_Appoint_service.removeMultiple([]).then((resp: any) => {
-        if (resp.Success) {
-          toast.success(_t("Delete success !"));
-          onSuccess();
-          handleClose();
-        } else {
-          ShowError(resp.ErrorData);
+      Staff_Appoint_service.Delete(data.StaffAppointCodeSys).then(
+        (resp: any) => {
+          if (resp.Success) {
+            toast.success(_t("Delete success !"));
+            onSuccess();
+            handleClose();
+          } else {
+            ShowError(resp.ErrorData);
+          }
         }
-      });
+      );
     } else {
       if (!formRef.current.check || !formRef.current) {
         return;
