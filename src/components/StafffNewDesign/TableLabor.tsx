@@ -1,9 +1,8 @@
 import React from "react";
 import { Table } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import ModalStaffEdit from "./ModalStaffEdit";
-import EditComponent from "components/EditCell/EditCellComponent";
 import { v4 as uuid } from "uuid";
+import StaffExpEdit from "pages/StaffNew/StaffExp/StaffExpEdit";
 
 export default function TableLabor({
   dataHeader,
@@ -30,7 +29,7 @@ export default function TableLabor({
   return (
     <div style={{ background: "white", height: "100vh", marginTop: "8px" }}>
       {checkEdit && (
-        <ModalStaffEdit
+        <StaffExpEdit
           button={
             <div
               style={{

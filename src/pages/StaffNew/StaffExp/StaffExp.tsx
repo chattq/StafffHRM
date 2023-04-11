@@ -1,11 +1,11 @@
 import EditComponent from "components/EditCell/EditCellComponent";
-import ModalStaffEdit from "components/StafffNewDesign/ModalStaffEdit";
 import TableLabor from "components/StafffNewDesign/TableLabor";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import Staff_WorkExperience_service from "services/Staff/Staff_WorkExperience_service";
 import { v4 as uuid } from "uuid";
+import StaffExpEdit from "./StaffExpEdit";
 
 interface Exp {
   DateForm?: string;
@@ -52,7 +52,7 @@ export default function StaffExp() {
           <tr key={index}>
             {checkEdit && (
               <td>
-                <ModalStaffEdit
+                <StaffExpEdit
                   button={
                     <EditComponent
                       handleEdit={handleEdit}
@@ -83,7 +83,6 @@ export default function StaffExp() {
     );
   };
 
-  const ModalBody = () => {};
   return (
     <div>
       <TableLabor
