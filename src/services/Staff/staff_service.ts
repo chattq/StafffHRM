@@ -70,8 +70,11 @@ const getCurrentUser = async () => {
   return await api.post("Staff_Staff/GetByAccessToken", {});
 };
 
-const remove = async (data: any) => {
-  return await api.post("Staff_Staff/Delete", data);
+const remove = async ({ StaffCode: StaffCode, OrgID: OrgID }: any) => {
+  return await api.post("Staff_Staff/Delete", {
+    StaffCode: StaffCode,
+    OrgID: OrgID,
+  });
 };
 
 const removeMultiple = async (data: any) => {

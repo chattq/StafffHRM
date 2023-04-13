@@ -14,7 +14,6 @@ export const HeaderContainer = styled.div`
 
   & .more-wrapper {
     position: relative;
-
     & .rs-dropdown-toggle.rs-btn.rs-btn-default {
       & .rs-dropdown-toggle-caret.rs-icon {
         opacity: 0;
@@ -45,7 +44,7 @@ export const HeaderContainer = styled.div`
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     & .more-wrapper__item-button {
       margin-bottom: 2px;
-      min-width: 200px;
+      width: 200px;
       text-align: left;
       background-color: white !important;
       padding: 5px 10px;

@@ -24,10 +24,10 @@ export default function StaffInforFamilyEdit({
   flag?: string;
   uuid?: string;
 }) {
+  console.log(data);
   const formRef: any = useRef(null);
   const [formValue, setFormValue] = useState({} as any);
   const [flagProps, setFlagProps] = useState(flag);
-
   const _l = useLocalization("ModalStaffEdit");
   const _t = useLocalization("toast");
   const _p = useLocalization("Placeholder");
@@ -46,52 +46,46 @@ export default function StaffInforFamilyEdit({
   const { staffCode } = useParams();
   const listFormItem: any[] = [
     {
-      label: _l("Thời gian"), // Th
+      label: _l("Quan hệ"), // công ty
       required: true,
       control: [
         {
-          rule: dateRequiredRule,
-          name: "DateForm",
-          placeholder: _p("Từ ngày"),
-          accepter: DatePicker,
-          className: "w-5",
-        },
-        {
-          rule: dateRequiredRule,
-          name: "DateTo",
-          placeholder: _p("Đến ngày"),
-          accepter: DatePicker,
-          className: "w-5",
-        },
-      ],
-    },
-    {
-      label: _l("Công ty"), // công ty
-      required: true,
-      control: [
-        {
-          name: "Company",
+          name: "Relationship",
           placeholder: _p("Nhập"),
         },
       ],
     },
     {
-      label: _l("Vị trí"), // vị trí
+      label: _l("Họ và tên"), // vị trí
       required: true,
       control: [
         {
           rule: requiredRule,
-          name: "Position",
+          name: "FullName",
           placeholder: _p("Nhập"),
         },
       ],
     },
     {
-      label: _l("Kinh nghiệm làm việc"), // kinh nghiệm làm việc
+      label: _l("Ngày sinh"), // Th
+      required: true,
       control: [
         {
-          name: "WorkExperience",
-          accepter: Textarea,
+          rule: dateRequiredRule,
+          name: "DateOfBirth",
+          placeholder: _p("Từ ngày"),
+          accepter: DatePicker,
+          className: "w-5",
+        },
+      ],
+    },
+
+    {
+      label: _l("Nghề nghiệp"), // vị trí
+
+      control: [
+        {
+          name: "Career",
           placeholder: _p("Nhập"),
         },
       ],
@@ -121,21 +115,28 @@ export default function StaffInforFamilyEdit({
         return;
       } else {
         const condition = {
-          StaffCode: staffCode ? staffCode : "",
-          Idx: formValue.Idx ? formValue.Idx : "",
-          DateForm: formValue.DateForm ? convertDate(formValue.DateForm) : "",
-          Company: formValue.Company ? formValue.Company : "",
-          Position: formValue.Position ? formValue.Position : "",
-          WorkExperience: formValue.WorkExperience
-            ? formValue.WorkExperience
+          StaffCode: staffCode,
+          OrgID: formValue.OrgID ? formValue.OrgID : "",
+          RelativeInfoID: formValue.RelativeInfoID
+            ? formValue.RelativeInfoID
             : "",
-          DateTo: convertDate(formValue.DateTo)
-            ? convertDate(formValue.DateTo)
+          RelativeType: formValue.RelativeType
+            ? formValue.RelativeType
+            : "EMPLOYEERELATION",
+          FullName: formValue.FullName ? formValue.FullName : "",
+          Relationship: formValue.Relationship ? formValue.Relationship : "",
+          DateOfBirth: formValue.DateOfBirth
+            ? new Date(formValue.DateOfBirth)
             : "",
+          Career: formValue.Career ? formValue.Career : "",
+          FlagDependent: formValue.FlagDependent ? formValue.FlagDependent : "",
+          DateStart: formValue.DateStart ? new Date(formValue.DateStart) : "",
+          DateEnd: formValue.DateEnd ? new Date(formValue.DateEnd) : "",
+          Remark: formValue.Remark ? formValue.Remark : "",
         };
 
         if (flagProps === "update") {
-          Staff_WorkExperience_service.Create(condition).then((resp: any) => {
+          Mst_RelativeInfo_service.Create(condition).then((resp: any) => {
             if (resp.Success) {
               toast.success(_t("Add SuccessFully"));
               onSuccess();
@@ -147,8 +148,7 @@ export default function StaffInforFamilyEdit({
           });
         }
         if (flag === "detail") {
-          console.log(condition);
-          Staff_WorkExperience_service.Update(condition).then((resp: any) => {
+          Mst_RelativeInfo_service.Update(condition).then((resp: any) => {
             if (resp.Success) {
               toast.success(_t("Update SuccessFully"));
               onSuccess();
@@ -165,13 +165,18 @@ export default function StaffInforFamilyEdit({
   const render = () => {
     if (flag === "detail") {
       setFormValue({
+        RelativeInfoID: data.RelativeInfoID,
+        OrgID: data.OrgID,
+        RelativeType: data.RelativeType,
         StaffCode: staffCode,
-        Idx: data.Idx,
-        DateForm: new Date(data.DateForm),
-        DateTo: new Date(data.DateTo),
-        Company: data.Company,
-        Position: data.Position,
-        WorkExperience: data.WorkExperience,
+        FullName: data.FullName,
+        Relationship: data.Relationship,
+        DateOfBirth: new Date(data.DateOfBirth),
+        Career: data.Career,
+        FlagDependent: "",
+        DateStart: "",
+        DateEnd: "",
+        Remark: "",
       });
     }
   };

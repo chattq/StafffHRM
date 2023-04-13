@@ -176,6 +176,7 @@ export default function StaffLaborContractEdit({
           ContractNo: formValue.ContractNo ? formValue.ContractNo : "",
           SignDate: formValue.SignDate ? convertDate(formValue.SignDate) : "",
           ContactType: formValue.ContactType ? formValue.ContactType : "",
+
           ContractDetail: formValue.ContractDetail
             ? formValue.ContractDetail
             : "",

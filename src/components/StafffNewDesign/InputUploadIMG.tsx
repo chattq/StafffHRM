@@ -19,18 +19,18 @@ export default function InputUploadIMG() {
     setFile(fileFromLocal);
   };
 
-  //   const fetchUpload = async () => {
-  //     if (file) {
-  //       const form = new FormData();
-  //       form.append("image", file);
-  //       const reps = await Uploader.uploadFile(form);
-  //       console.log(reps);
-  //     }
-  //   };
+  const fetchUpload = async () => {
+    if (file) {
+      const form = new FormData();
+      form.append("image", file);
+      const reps = await UploadFile_service.UploadFile(form);
+      console.log(reps);
+    }
+  };
 
-  //   useEffect(() => {
-  //     fetchUpload();
-  //   }, [file]);
+  useEffect(() => {
+    fetchUpload();
+  }, [file]);
 
   return (
     <div

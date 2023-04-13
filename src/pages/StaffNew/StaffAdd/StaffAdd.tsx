@@ -45,7 +45,6 @@ export default function StaffAdd({ flag, code, onSuccess, uuid }: Props) {
   const listGender = useSelectListGender();
   const staffType = useSelectListStaffType();
   const staff = useSelectListStaff();
-  console.log(51, staff);
 
   const listFormItem: any[] = [
     {

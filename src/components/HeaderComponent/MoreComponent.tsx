@@ -20,16 +20,12 @@ function MoreComponent(props: Props) {
     <div className="more-wrapper">
       <Dropdown
         title={
-          <div
-            className="more-wrapper__button"
-            onClick={handleChangeOpen}
-          >
+          <div className="more-wrapper__button" onClick={handleChangeOpen}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="17.999"
               height="4"
-              viewBox="0 0 17.999 4"
-            >
+              viewBox="0 0 17.999 4">
               <path
                 id="ic_more"
                 d="M1495,6278a2,2,0,1,1,2,2A2,2,0,0,1,1495,6278Zm-7,0a2,2,0,1,1,2,2A2,2,0,0,1,1488,6278Zm-7,0a2,2,0,1,1,2,2A2,2,0,0,1,1481,6278Z"
@@ -38,16 +34,14 @@ function MoreComponent(props: Props) {
               />
             </svg>
           </div>
-        }
-      >
+        }>
         <div className="more-wrapper__list-button">
           {props.listButton.map((item: MoreInterface) => {
             if (item.upload) {
               return (
                 <PermissionContainer
                   key={uuid()}
-                  permission={item?.permission ? item.permission : ""}
-                >
+                  permission={item?.permission ? item.permission : ""}>
                   <Uploader
                     key={uuid()}
                     className={`${
@@ -57,8 +51,7 @@ function MoreComponent(props: Props) {
                     headers={buildHeaders()}
                     onSuccess={item.event}
                     multiple={false}
-                    fileListVisible={false}
-                  >
+                    fileListVisible={false}>
                     <button>{item.label}</button>
                   </Uploader>
                 </PermissionContainer>
@@ -67,12 +60,10 @@ function MoreComponent(props: Props) {
               return (
                 <PermissionContainer
                   key={uuid()}
-                  permission={item?.permission ? item.permission : ""}
-                >
+                  permission={item?.permission ? item.permission : ""}>
                   <button
                     onClick={item.event}
-                    className="more-wrapper__item-button"
-                  >
+                    className="more-wrapper__item-button">
                     {item.label}
                   </button>
                 </PermissionContainer>

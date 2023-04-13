@@ -90,23 +90,48 @@ export default function StaffInforFamily() {
           marginTop: "8px",
           padding: "20px 30px 20px 30px",
         }}>
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <div
-            style={{
-              height: "30px",
-              width: "30px",
-              background: "green",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              borderRadius: "50%",
-            }}>
-            <FaUsers style={{ color: "white" }} />
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <div
+              style={{
+                height: "30px",
+                width: "30px",
+                background: "green",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: "50%",
+              }}>
+              <FaUsers style={{ color: "white" }} />
+            </div>
+            <span
+              style={{ color: "black", fontWeight: "600", marginLeft: "15px" }}>
+              Thông tin người thân
+            </span>
           </div>
-          <span
-            style={{ color: "black", fontWeight: "600", marginLeft: "15px" }}>
-            Thông tin người thân
-          </span>
+          {checkEdit ? (
+            <StaffInforFamilyEdit
+              button={
+                <div
+                  style={{
+                    padding: "6px 10px",
+                    border: "1px solid",
+                    background: "#f8f6f5",
+                    cursor: "pointer",
+                    borderRadius: "6px",
+                  }}
+                  onClick={handleAdd}>
+                  Thêm thông tin
+                </div>
+              }
+              onSuccess={fetchDataFamily}
+            />
+          ) : null}
         </div>
         <div style={{ marginTop: "20px" }}>
           <TableLabor

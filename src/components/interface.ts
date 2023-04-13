@@ -9,6 +9,7 @@ export interface MoreInterface {
   event?: any; // event của cái nút
   upload?: UploaderInterface; // trường hợp button import
   permission?: string; // quyền được xem của cái nút
+  style?: any;
 }
 
 export interface UploaderInterface extends UploaderProps {
