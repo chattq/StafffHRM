@@ -53,9 +53,8 @@ const searchInactive = async (data: Props) => {
   return await api.post("Staff_Staff/SearchStaffInactive", data);
 };
 
-const update = async ({ isNew, data }: UpdateInterface) => {
+const update = async ({ isNew, data }: any) => {
   const str = JSON.stringify(data);
-  console.log("Str ", str);
   if (isNew) {
     return await api.post("Staff_Staff/Create", {
       strJson: str,
@@ -67,9 +66,9 @@ const update = async ({ isNew, data }: UpdateInterface) => {
   }
 };
 
-const getCurrentUser = async() => {
-  return await api.post("Staff_Staff/GetByAccessToken", {})
-}
+const getCurrentUser = async () => {
+  return await api.post("Staff_Staff/GetByAccessToken", {});
+};
 
 const remove = async (data: any) => {
   return await api.post("Staff_Staff/Delete", data);

@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import { UploaderProps } from "rsuite";
+import { StaffAddType } from "./StafffNewDesign/TypeStaff";
 
 // interface tien anh
 export interface MoreInterface {
@@ -41,8 +42,8 @@ export interface FormValidateInterface {
 }
 
 export interface UpdateInterface {
-  data: any;
-  isNew: boolean;
+  data?: any;
+  isNew?: boolean;
 }
 
 export interface SearchPropsDefault {

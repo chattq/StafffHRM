@@ -79,7 +79,7 @@ export const ConvertNumberToDate = (param: number) => {
   return new Date(date.setHours(hour, minute));
 };
 
-export const convertDate = (param: Date) => {
+export const convertDate = (param: any) => {
   var date = new Date(param);
   var dateString = new Date(date.getTime() - date.getTimezoneOffset() * 60000)
     .toISOString()

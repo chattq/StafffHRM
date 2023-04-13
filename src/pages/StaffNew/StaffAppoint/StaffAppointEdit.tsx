@@ -168,7 +168,6 @@ export default function StaffAppointEdit({
           });
         }
         if (flag === "detail") {
-          console.log(condition);
           Staff_WorkExperience_service.Update(condition).then((resp: any) => {
             if (resp.Success) {
               toast.success(_t("Update SuccessFully"));

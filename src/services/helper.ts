@@ -90,6 +90,23 @@ const post = async (url: string, params: any) => {
 
   return postWithHeader(url, headers, params);
 };
+const postFile = async (url: string, params: any) => {
+  const { token } = store.getState().auth;
+  const { NetworkId, OrgId } = store.getState().orgInfo;
+
+  let headers = {
+    // "Content-Type": "application/json",
+    "Content-Type": "multipart/form-data",
+    Authorization: token ? `Bearer ${token}` : "",
+    AppAgent: AppAgent,
+    GwUserCode: GwUserCode,
+    GwPassword: GwUserPassword,
+    NetworkId: NetworkId,
+    OrgId: OrgId,
+  };
+
+  return postWithHeaders(url, headers, params);
+};
 
 const get = async (url: string, params: any) => {
   try {
@@ -119,4 +136,4 @@ const get = async (url: string, params: any) => {
   }
 };
 
-export { post, get, postWithHeader, posts };
+export { post, get, postWithHeader, postFile, posts };

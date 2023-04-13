@@ -992,7 +992,7 @@ textarea.rs-input,
 
 .customToggle .rs-form-control-label {
   width: 100px !important;
-  min-width: 100px !important;
+  min-width: 110px !important;
 }
 
 .customForm .rs-row {

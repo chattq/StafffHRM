@@ -2,6 +2,11 @@ import TableLabor from "components/StafffNewDesign/TableLabor";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Train_Course_service from "services/Course/Train_Course/Train_Course_service";
+import StaffTrainEdit from "./StaffTrainEdit";
+import { v4 as uuid } from "uuid";
+import { useSelector } from "react-redux";
+import EditComponent from "components/EditCell/EditCellComponent";
+import { convertDate } from "utils/date";
 
 interface Train {
   LearnStartDTimeUTC?: string;
@@ -9,12 +14,15 @@ interface Train {
   TrCsName?: string;
   TrainType?: string;
   LrCrStatus?: string;
-  TrCsCodeSys?: string;
+  RankName?: any;
 }
 
 export default function StaffTrain() {
   const { staffCode } = useParams();
-
+  const [flag, setFlag] = useState("");
+  const checkEdit = useSelector((state: any) => state.ui.checkEdit);
+  const [dataEdit, setDataEdit] = useState([]);
+  const [id, setId] = useState("");
   const [dataTrain, setDataTrain] = useState([]);
   const fetchDataLabor = async () => {
     const resp = await Train_Course_service.GetByStaffCode(staffCode as string);
@@ -26,19 +34,83 @@ export default function StaffTrain() {
   useEffect(() => {
     fetchDataLabor();
   }, []);
-  console.log(17, dataTrain);
+  const handleEdit = (data: any) => {
+    setFlag("detail");
+    setDataEdit(data);
+    setId(uuid());
+  };
+
+  const handleDeleteSingle = (data: any) => {
+    setFlag("delete");
+    setDataEdit(data);
+    setId(uuid());
+  };
+  const handleAdd = () => {
+    setFlag("update");
+    setId(uuid());
+  };
   const dataThTrain = () => {
     return (
       <>
         {dataTrain?.map((td: Train, index: number) => (
           <tr key={index}>
-            {/* <td>{td.DecisionNo}</td>
-            <td>{td.ApprovalDate}</td>
-            <td>{td.AppointGroup}</td>
-            <td>{td.ApprovalPosition}</td>
-            <td>{td.Remark}</td> */}
+            {checkEdit && (
+              <td>
+                <StaffTrainEdit
+                  button={
+                    <EditComponent
+                      handleEdit={handleEdit}
+                      data={dataEdit}
+                      handleDeleteSingle={handleDeleteSingle}
+                    />
+                  }
+                  data={td}
+                  flag={flag}
+                  uuid={id}
+                  onSuccess={fetchDataLabor}
+                />
+              </td>
+            )}
+            <td>{convertDate(td.LearnStartDTimeUTC)}</td>
+            <td>{convertDate(td.LearnStartDTimeUTC)}</td>
+            <td>{td.TrCsName}</td>
+            <td>{td.LrCrStatus}</td>
+            <td>{td.TrainType}</td>
+            <td>{td.RankName}</td>
           </tr>
         ))}
+      </>
+    );
+  };
+  const buttonModal = () => {
+    return (
+      <>
+        {checkEdit && (
+          <StaffTrainEdit
+            button={
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  padding: "16px 30px",
+                }}
+                onClick={handleAdd}>
+                <span
+                  style={{
+                    padding: "5px 15px",
+                    borderRadius: "4px",
+                    border: "1px solid",
+                    color: "black",
+                    cursor: "pointer",
+                    background: "#eaeaea",
+                  }}>
+                  Thêm quá trình đào tạo
+                </span>
+              </div>
+            }
+            onSuccess={fetchDataLabor}
+          />
+        )}
       </>
     );
   };
@@ -55,7 +127,8 @@ export default function StaffTrain() {
         ]}
         inforLabor={dataThTrain()}
         data={dataTrain}
-        title={"Thêm quá trình"}
+        setId={setId}
+        buttonModal={buttonModal()}
       />
     </div>
   );

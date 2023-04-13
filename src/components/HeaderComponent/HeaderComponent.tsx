@@ -17,6 +17,7 @@ import {
 } from "rsuite";
 import MoreComponent from "./MoreComponent";
 import { HeaderContainer } from "./styled";
+import { Link } from "react-router-dom";
 
 interface Props {
   keyword: string;
@@ -32,6 +33,7 @@ interface Props {
   link?: string;
   hideButton?: boolean;
   customTitleButtonAdd?: any;
+  addNewStaff?: any;
 }
 
 function HeaderComponent(props: Props) {
@@ -75,23 +77,37 @@ function HeaderComponent(props: Props) {
                       permission={`${
                         props?.permission ? props.permission : ""
                       }`}>
-                      <Button
-                        color="green"
-                        size="sm"
-                        appearance="primary"
-                        onClick={props.handleAdd}
-                        className="header-button">
-                        <Icon as={BsPlusCircle} className="mr-1" />
-                        <span>
-                          {_l(
-                            `${
-                              props?.buttonContent
-                                ? props?.buttonContent
-                                : "Add new"
-                            }`
-                          )}
-                        </span>
-                      </Button>
+                      {props?.addNewStaff ? (
+                        <Link to="/addStaff">
+                          <Button
+                            color="green"
+                            size="sm"
+                            appearance="primary"
+                            onClick={props.handleAdd}
+                            className="header-button">
+                            <Icon as={BsPlusCircle} className="mr-1" />
+                            Add new{" "}
+                          </Button>
+                        </Link>
+                      ) : (
+                        <Button
+                          color="green"
+                          size="sm"
+                          appearance="primary"
+                          onClick={props.handleAdd}
+                          className="header-button">
+                          <Icon as={BsPlusCircle} className="mr-1" />
+                          <span>
+                            {_l(
+                              `${
+                                props?.buttonContent
+                                  ? props?.buttonContent
+                                  : "Add new"
+                              }`
+                            )}
+                          </span>
+                        </Button>
+                      )}
                     </PermissionContainer>
                   )}
 

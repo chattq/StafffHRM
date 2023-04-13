@@ -119,10 +119,10 @@ export default function StaffInforFull() {
               ) : (
                 <p>{data?.Staff_Staff?.WorkingEndDate}</p>
               )}
-              {data?.Staff_Staff?.StaffStatus === "PAUSED" || "INACTIVE" ? (
-                <p>{`Đã nghỉ việc`}</p>
+              {data?.Staff_Staff?.StaffStatus === "ACTIVE" ? (
+                <p>{"Đang làm việc"}</p>
               ) : (
-                <p>{`Đang làm việc`}</p>
+                <p>{"Đã nghỉ việc"}</p>
               )}
             </div>
           </div>

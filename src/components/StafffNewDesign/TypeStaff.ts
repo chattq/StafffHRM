@@ -1,0 +1,30 @@
+export interface StaffAddType {
+  OrgID?: string;
+  StaffCode?: string;
+  StaffCodeUser?: string;
+  StaffLastName?: string;
+  StaffName?: string;
+  StaffType?: string;
+  StaffPhone?: string;
+  ManagerStaff?: string;
+  UserID?: string;
+  Remark?: string;
+  UserPassword?: string;
+  WorkingStartDate?: any;
+  StaffAddress?: string;
+  NetworkID?: string;
+  DBO?: string;
+  WorkingEndDate?: any;
+  PermanentAddress?: string;
+  BirthPlace?: string;
+  DateOfIssue?: string;
+  StaffFullName?: string;
+  PlaceOfIssue?: string;
+  FlagFileUpload?: string;
+  AttFileId?: string;
+  FlagActive?: string;
+  AvatarFileName?: string;
+  JsonDynamicField?: string;
+  DepartmentCode?: string;
+  PositionCode?: string;
+}

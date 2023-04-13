@@ -323,6 +323,7 @@ function StaffTable() {
             reloading={reloading}
             // handleAdd={handleAdd}
             title=""
+            addNewStaff={true}
             listMore={listMore}
           />
           <Content>

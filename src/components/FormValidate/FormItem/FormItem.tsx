@@ -13,8 +13,7 @@ const FormItem: FC<Props> = ({ item }: Props) => {
       xs={item.Col ? item.Col : 24}
       className={`${item?.isHidden ? "d-none" : ""} ${
         item?.customClass ? item.customClass : ""
-      }`}
-    >
+      }`}>
       <FormItemContainer className="form-item-container">
         <Form.ControlLabel>
           {item.label}{" "}
@@ -34,18 +33,17 @@ const FormItem: FC<Props> = ({ item }: Props) => {
                     key={`form-control-${indexControl}`}
                     className={`${
                       itemControl.length > 1 ? "form-control-multiple" : ""
-                    } ${itemControl.className ? itemControl.className : ""}`}
-                  >
+                    } ${itemControl.className ? itemControl.className : ""}`}>
                     <div
-                      className={`separate ${item?.hideSeparate ? "hide" : ""}`}
-                    >
+                      className={`separate ${
+                        item?.hideSeparate ? "hide" : ""
+                      }`}>
                       -
                     </div>
                     <Form.Control
                       {...itemControl}
                       className={itemControl.className ? "" : ""}
-                      name={itemControl.name}
-                    >
+                      name={itemControl.name}>
                       {itemControl.children}
                     </Form.Control>
                     {itemControl?.customerFormItem}
@@ -57,8 +55,7 @@ const FormItem: FC<Props> = ({ item }: Props) => {
             })}
             {item?.customComponent ? (
               <div
-                style={{ display: "block", width: "max-content", flex: "0" }}
-              >
+                style={{ display: "block", width: "max-content", flex: "0" }}>
                 {item?.customComponent}
               </div>
             ) : (

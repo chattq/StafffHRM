@@ -46,15 +46,14 @@ const FormValidate: FC<FormValidateInterface> = forwardRef(
           model={model}
           layout={layout}
           className={`form-validate ${className ? className : ""}`}
-          style={style}
-        >
+          style={style}>
           <Row
             style={{
-              justifyContent: "space-between",
+              // justifyContent: "center",
+              columnGap: "80px",
               display: "flex",
               flexWrap: "wrap",
-            }}
-          >
+            }}>
             {listItem.map((item: FormItemInterface, index: number) => {
               return (
                 <FormItem key={`form-validate-item-${index}`} item={item} />

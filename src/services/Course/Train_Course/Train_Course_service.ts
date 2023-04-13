@@ -30,9 +30,9 @@ const search = async (data: Props) => {
   return await api.post("Train_Course/Search", data);
 };
 
-const update = async ({ isNew, data }: UpdateInterface) => {
+const update = async ({ isNew, data }: any) => {
   const str = JSON.stringify(data);
-  console.log("str ", str);
+
   if (isNew) {
     return await api.post("Train_Course/Add", {
       strJson: str,
