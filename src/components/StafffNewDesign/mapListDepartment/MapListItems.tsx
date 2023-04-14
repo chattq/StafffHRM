@@ -1,7 +1,5 @@
 import useSelectListDepartment from "hooks/Select/useSelectListDepartment";
 import useSelectListPosition from "hooks/Select/useSelectListPosition";
-import useSelectStoreDepartment from "hooks/Select/useSelectStoreDepartment";
-import useSelectStorePosition from "hooks/Select/useSelectStorePosition";
 import React, { useState, useEffect, FC, memo, useRef } from "react";
 import { FiPlus, FiTrash } from "react-icons/fi";
 import { Button, Col, Form, IconButton, Row, SelectPicker } from "rsuite";
@@ -39,8 +37,8 @@ const MapListDepartmentItem: FC<Props> = ({
     id: item.id,
   } as any);
 
-  const selectListDepartment: any[] = useSelectStoreDepartment();
-  const selectListPosition: any[] = useSelectStorePosition();
+  const selectListDepartment: any[] = useSelectListDepartment();
+  const selectListPosition: any[] = useSelectListPosition();
 
   useEffect(() => {
     setFormValue(item);
@@ -91,8 +89,7 @@ const MapListDepartmentItem: FC<Props> = ({
             onClick={
               index === 0 ? () => handleAdd() : () => handleRemove(item, index)
             }
-            icon={index === 0 ? <FiPlus /> : <FiTrash />}
-          ></IconButton>
+            icon={index === 0 ? <FiPlus /> : <FiTrash />}></IconButton>
         )}
       </div>
     </MapListDepartMentWrapper>

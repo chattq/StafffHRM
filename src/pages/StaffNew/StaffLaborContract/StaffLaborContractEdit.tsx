@@ -2,18 +2,12 @@ import { ShowError } from "components/Dialogs/Dialogs";
 import ModalStaffEdit from "components/StafffNewDesign/ModalStaffEdit";
 import { Textarea } from "components/input/Textarea";
 import useSelectListContractType from "hooks/Select/useSelectContractType";
-import useSelectListRank from "hooks/Select/useSelectListRank";
-import useSelectListStaffType from "hooks/Select/useSelectListStaffType";
-import useSelectTrainType from "hooks/Select/useSelectTrainType";
 import { useLocalization } from "hooks/useLocalization";
 import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { DatePicker, SelectPicker, Uploader } from "rsuite";
-import Train_Course_service from "services/Course/Train_Course/Train_Course_service";
-import Staff_Appoint_service from "services/Staff/Staff_Appoint_service";
 import Staff_LaborContract_service from "services/Staff/Staff_LaborContract_service";
-import Staff_WorkExperience_service from "services/Staff/Staff_WorkExperience_service";
 import { convertDate } from "utils/date";
 import { dateRequiredRule, requiredRule } from "utils/validationRules";
 
@@ -176,7 +170,9 @@ export default function StaffLaborContractEdit({
           ContractNo: formValue.ContractNo ? formValue.ContractNo : "",
           SignDate: formValue.SignDate ? convertDate(formValue.SignDate) : "",
           ContactType: formValue.ContactType ? formValue.ContactType : "",
-
+          ContractCodeSys: formValue.ContractCodeSys
+            ? formValue.ContractCodeSys
+            : "",
           ContractDetail: formValue.ContractDetail
             ? formValue.ContractDetail
             : "",
@@ -192,7 +188,7 @@ export default function StaffLaborContractEdit({
             ? formValue.ContractFileUrl
             : "",
         };
-
+        console.log(195, condition);
         if (flagProps === "update") {
           Staff_LaborContract_service.update({
             isNew: true,
@@ -238,6 +234,7 @@ export default function StaffLaborContractEdit({
         EffectiveDate: new Date(data.EffectiveDate),
         ExpirationDate: new Date(data.ExpirationDate),
         ContractFileUrl: data.ContractFileUrl,
+        ContractCodeSys: data.ContractCodeSys,
       });
     }
   };

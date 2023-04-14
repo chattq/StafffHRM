@@ -135,31 +135,87 @@ export default function StaffInfor() {
                 }}>
                 <NavLink
                   to={`/StaffNew/${staffCode}/chitiet`}
-                  style={{
-                    textTransform: "uppercase",
-                    color: "green",
-                    fontWeight: "600",
-                  }}>
+                  style={({ isActive }) =>
+                    isActive
+                      ? {
+                          textTransform: "uppercase",
+                          color: "green",
+                          fontWeight: "600",
+                        }
+                      : {
+                          textTransform: "uppercase",
+                          color: "black",
+                          fontWeight: "600",
+                        }
+                  }>
                   Thông Tin Chung
                 </NavLink>
                 <NavLink
                   to={`/StaffNew/${staffCode}/labor`}
-                  style={{ textTransform: "uppercase", fontWeight: "600" }}>
+                  style={({ isActive }) =>
+                    isActive
+                      ? {
+                          textTransform: "uppercase",
+                          color: "green",
+                          fontWeight: "600",
+                        }
+                      : {
+                          textTransform: "uppercase",
+                          color: "black",
+                          fontWeight: "600",
+                        }
+                  }>
                   Hợp đồng lao động
                 </NavLink>
                 <NavLink
                   to={`/StaffNew/${staffCode}/appoint`}
-                  style={{ textTransform: "uppercase", fontWeight: "600" }}>
+                  style={({ isActive }) =>
+                    isActive
+                      ? {
+                          textTransform: "uppercase",
+                          color: "green",
+                          fontWeight: "600",
+                        }
+                      : {
+                          textTransform: "uppercase",
+                          color: "black",
+                          fontWeight: "600",
+                        }
+                  }>
                   Quá trình điều động/Bổ nhiệm
                 </NavLink>
                 <NavLink
                   to={`/StaffNew/${staffCode}/Train`}
-                  style={{ textTransform: "uppercase", fontWeight: "600" }}>
+                  style={({ isActive }) =>
+                    isActive
+                      ? {
+                          textTransform: "uppercase",
+                          color: "green",
+                          fontWeight: "600",
+                        }
+                      : {
+                          textTransform: "uppercase",
+                          color: "black",
+                          fontWeight: "600",
+                        }
+                  }>
                   Quá trình đào tạo
                 </NavLink>
                 <NavLink
                   to={`/StaffNew/${staffCode}/Experience`}
-                  style={{ textTransform: "uppercase", fontWeight: "600" }}>
+                  style={({ isActive }) =>
+                    isActive
+                      ? {
+                          textTransform: "uppercase",
+                          color: "green",
+                          fontWeight: "600",
+                        }
+                      : {
+                          textTransform: "uppercase",
+                          color: "black",
+                          fontWeight: "600",
+                        }
+                  }>
                   Kinh nghiệm làm việc
                 </NavLink>
               </div>

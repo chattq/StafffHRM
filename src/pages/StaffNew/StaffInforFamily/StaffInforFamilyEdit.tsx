@@ -24,7 +24,6 @@ export default function StaffInforFamilyEdit({
   flag?: string;
   uuid?: string;
 }) {
-  console.log(data);
   const formRef: any = useRef(null);
   const [formValue, setFormValue] = useState({} as any);
   const [flagProps, setFlagProps] = useState(flag);

@@ -27,4 +27,5 @@ export interface StaffAddType {
   JsonDynamicField?: string;
   DepartmentCode?: string;
   PositionCode?: string;
+  GovIDType?: string;
 }

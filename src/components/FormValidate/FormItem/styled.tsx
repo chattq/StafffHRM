@@ -8,7 +8,7 @@ export const FormItemContainer = styled.div`
 
   & .rs-form-control-label {
     flex: 0;
-    min-width: 115px;
+    min-width: 130px;
     margin-bottom: 5px;
     font-weight: 400 !important;
 

@@ -18,6 +18,8 @@ import {
 import MoreComponent from "./MoreComponent";
 import { HeaderContainer } from "./styled";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setCheckEdit } from "store/reducers/ui";
 
 interface Props {
   keyword: string;
@@ -39,6 +41,10 @@ interface Props {
 function HeaderComponent(props: Props) {
   const _l = useLocalization("HeaderComponent");
   const _b = useLocalization("Button");
+  const dispatch = useDispatch();
+  const handleCheck = () => {
+    dispatch(setCheckEdit(false));
+  };
 
   return (
     <HeaderContainer>
@@ -83,7 +89,7 @@ function HeaderComponent(props: Props) {
                             color="green"
                             size="sm"
                             appearance="primary"
-                            onClick={props.handleAdd}
+                            onClick={handleCheck}
                             className="header-button">
                             <Icon as={BsPlusCircle} className="mr-1" />
                             Add new{" "}

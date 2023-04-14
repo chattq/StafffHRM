@@ -15,16 +15,15 @@ export default function InputUploadIMG() {
   };
   const onFileChange = (event: any) => {
     const fileFromLocal = event.target.files?.[0];
-    imgRef.current?.setAttribute("value", "");
     setFile(fileFromLocal);
   };
 
   const fetchUpload = async () => {
     if (file) {
-      const form = new FormData();
-      form.append("image", file);
-      const reps = await UploadFile_service.UploadFile(form);
-      console.log(reps);
+      const formData = new FormData();
+      formData.append("file", file, file?.name);
+      const reps = await UploadFile_service.UploadFile(file);
+      console.log(30, reps);
     }
   };
 
