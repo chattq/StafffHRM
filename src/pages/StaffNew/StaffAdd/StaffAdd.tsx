@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Button, Toggle } from "rsuite";
+import { Button, Input, Toggle } from "rsuite";
 import Avatar from "components/Avatar";
 import FormValidate from "components/FormValidate/FormValidate";
 import InputUploadIMG from "components/StafffNewDesign/InputUploadIMG";
@@ -31,26 +31,33 @@ type Props = {
   code?: any;
   onSuccess?: Function;
   uuid?: string;
+  dataStaffEdit?: any;
 };
-export default function StaffAdd({ flag, code, onSuccess, uuid }: Props) {
+export default function StaffAdd({
+  flag,
+  code,
+  onSuccess,
+  uuid,
+  dataStaffEdit,
+}: Props) {
+  const data = useSelector((state: any) => state.ui.data);
   const NetWorkID: string = `${import.meta.env.VITE_NETWORK_FIX}`;
   const checkEdit = useSelector((state: any) => state.ui.checkEdit);
-  console.log(38, checkEdit);
   const _l = useLocalization("Staff_Reward_Edit");
   const _t = useLocalization("toast");
   const _p = useLocalization("Placeholder");
   const formRef: any = useRef(null);
   const [flagProps, setFlagProps] = useState(flag);
-  const [formValue, setFormValue] = useState({} as StaffAddType);
+  const [formValue, setFormValue] = useState({} as any);
   const selectListStaff = useSelectListStaff();
   const listTypeID = useListGovIDType();
-
   const listDepartment = useSelectListDepartment();
   const listOrg = useListOrg();
   const listPosition = useSelectListPosition();
   const listGender = useSelectListGender();
   const staffType = useSelectListStaffType();
-
+  console.log(28, formValue);
+  // console.log(59, dataStaffEdit);
   const listFormItem: FormItemInterface[] = [
     {
       label: _l("Mã nhân viên"), // Mã nhân viên
@@ -96,8 +103,9 @@ export default function StaffAdd({ flag, code, onSuccess, uuid }: Props) {
       control: [
         {
           name: "OrgID",
-          accepter: SelectPicker,
+          accepter: checkEdit ? Input : SelectPicker,
           data: listOrg,
+          placeholder: checkEdit ? "" : _p("Chọn"),
           labelKey: "mnnt_NNTFullName",
           valueKey: "mnnt_NNTFullName",
         },
@@ -351,20 +359,81 @@ export default function StaffAdd({ flag, code, onSuccess, uuid }: Props) {
           },
         ],
       };
-      staff_service
-        .update({ isNew: true, data: condition })
-        .then((resp: any) => {
-          if (resp.Success) {
-            toast.success(_t("Add SuccessFully"));
-            // onSuccess();
-            // setFormValue({});
-            // handleClose();
-          } else {
-            ShowError(resp.ErrorData);
-          }
-        });
+      console.log(360, checkEdit);
+      if (checkEdit) {
+        staff_service
+          .update({ isNew: true, data: condition })
+          .then((resp: any) => {
+            if (resp.Success) {
+              toast.success(_t("Add SuccessFully"));
+              // onSuccess();
+              // setFormValue({});
+              // handleClose();
+            } else {
+              ShowError(resp.ErrorData);
+            }
+          });
+      } else {
+        console.log("a");
+      }
     }
   };
+
+  const render = () => {
+    setFormValue({
+      Staff_Staff: {
+        StaffCodeUser: data.StaffCodeUser,
+        StaffName: data.StaffName,
+        StaffLastName: data.StaffLastName,
+        StaffFullName: data.StaffFullName,
+        StaffAddress: data.StaffAddress,
+        StaffPhone: data.StaffPhone,
+        OrgID: NetWorkID,
+        Remark: data.Remark,
+        WorkingEndDate: new Date(data.WorkingEndDate),
+        WorkingStartDate: new Date(data.WorkingStartDate),
+        BirthPlace: data.BirthPlace,
+        UserID: data.UserID,
+        StaffType: data.StaffType,
+        GovIDType: data.GovIDType,
+        PermanentAddress: data.PermanentAddress,
+      },
+      Lst_Staff_MapDepartment: [
+        {
+          DepartmentCode: "",
+          PositionCode: "",
+        },
+      ],
+    });
+  };
+  useEffect(() => {
+    console.log(411, "a");
+    setFormValue({
+      Staff_Staff: {
+        StaffCodeUser: data.StaffCodeUser,
+        StaffName: data.StaffName,
+        StaffLastName: data.StaffLastName,
+        StaffFullName: data.StaffFullName,
+        StaffAddress: data.StaffAddress,
+        StaffPhone: data.StaffPhone,
+        OrgID: NetWorkID,
+        Remark: data.Remark,
+        WorkingEndDate: new Date(data.WorkingEndDate),
+        WorkingStartDate: new Date(data.WorkingStartDate),
+        BirthPlace: data.BirthPlace,
+        UserID: data.UserID,
+        StaffType: data.StaffType,
+        GovIDType: data.GovIDType,
+        PermanentAddress: data.PermanentAddress,
+      },
+      Lst_Staff_MapDepartment: [
+        {
+          DepartmentCode: "",
+          PositionCode: "",
+        },
+      ],
+    });
+  }, [checkEdit]);
   const body = () => {
     // if (flagProps === "delete") {
     //   return (

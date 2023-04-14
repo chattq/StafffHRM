@@ -17,11 +17,13 @@ interface Family {
 }
 
 export default function StaffInforEdit() {
-  const checkEdit = useSelector((state: any) => state.ui.checkEdit);
+  const data = useSelector((state: any) => state.ui.data);
   const dispatch = useDispatch();
   const handleCancer = () => {
     dispatch(setCheckEdit(false));
   };
+  const [dataEdit, setDataEdit] = useState();
+  const handleSubmit = () => {};
   return (
     <>
       {/* thông tin cá nhân */}
@@ -58,7 +60,8 @@ export default function StaffInforEdit() {
                 borderRadius: "4px",
                 color: "white",
                 cursor: "pointer",
-              }}>
+              }}
+              onClick={handleSubmit}>
               Cập nhật
             </span>
             <span
@@ -75,7 +78,7 @@ export default function StaffInforEdit() {
           </div>
         </div>
         <div style={{ marginTop: "20px" }}>
-          <StaffAdd />
+          <StaffAdd dataStaffEdit={data} />
         </div>
       </div>
       {/* thông tin gia đình */}

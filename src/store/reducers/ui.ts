@@ -10,7 +10,7 @@ import {
   SIDEBAR_DARK_SKINS,
   SIDEBAR_LIGHT_SKINS,
 } from "utils/themes";
-
+import { v4 as uuid } from "uuid";
 export interface UiState {
   screenSize: string;
   menuSidebarCollapsed: boolean;

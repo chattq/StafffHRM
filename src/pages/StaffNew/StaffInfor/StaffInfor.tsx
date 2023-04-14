@@ -50,7 +50,6 @@ export default function StaffInfor() {
     } else {
       ShowError(resp.ErrorData);
     }
-    console.log(46, resp);
   };
 
   const listButton: MoreInterface[] = [
