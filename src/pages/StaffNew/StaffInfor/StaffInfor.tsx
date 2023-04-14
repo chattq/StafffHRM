@@ -16,6 +16,7 @@ import { toast } from "react-toastify";
 import { Button } from "rsuite";
 import staff_service from "services/Staff/staff_service";
 import { setCheckEdit, setData } from "store/reducers/ui";
+import StaffInforEdit from "./StaffInforEdit";
 
 export default function StaffInfor() {
   const _m = useLocalization("More");
@@ -23,7 +24,6 @@ export default function StaffInfor() {
   const { staffCode } = useParams<string>();
   const [dataStaff, setDataStaff] = useState([]);
   const [dataStaffDPM, setDataStaffDPM] = useState([]);
-  const [codeDelete, setCodeDelete] = useState();
   const dispatch = useDispatch();
   const nav = useNavigate();
   const _t = useLocalization("toast");

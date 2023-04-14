@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Link, useParams } from "react-router-dom";
-import { Button, Input, Toggle } from "rsuite";
+import { Button, Toggle } from "rsuite";
 import Avatar from "components/Avatar";
 import FormValidate from "components/FormValidate/FormValidate";
 import InputUploadIMG from "components/StafffNewDesign/InputUploadIMG";
@@ -31,16 +31,8 @@ type Props = {
   code?: any;
   onSuccess?: Function;
   uuid?: string;
-  dataStaffEdit?: any;
 };
-export default function StaffAdd({
-  flag,
-  code,
-  onSuccess,
-  uuid,
-  dataStaffEdit,
-}: Props) {
-  const data = useSelector((state: any) => state.ui.data);
+export default function StaffAdd({ flag, code, onSuccess, uuid }: Props) {
   const NetWorkID: string = `${import.meta.env.VITE_NETWORK_FIX}`;
   const checkEdit = useSelector((state: any) => state.ui.checkEdit);
   const _l = useLocalization("Staff_Reward_Edit");
@@ -48,16 +40,16 @@ export default function StaffAdd({
   const _p = useLocalization("Placeholder");
   const formRef: any = useRef(null);
   const [flagProps, setFlagProps] = useState(flag);
-  const [formValue, setFormValue] = useState({} as any);
+  const [formValue, setFormValue] = useState({} as StaffAddType);
   const selectListStaff = useSelectListStaff();
   const listTypeID = useListGovIDType();
+
   const listDepartment = useSelectListDepartment();
   const listOrg = useListOrg();
   const listPosition = useSelectListPosition();
   const listGender = useSelectListGender();
   const staffType = useSelectListStaffType();
-  console.log(28, formValue);
-  // console.log(59, dataStaffEdit);
+
   const listFormItem: FormItemInterface[] = [
     {
       label: _l("Mã nhân viên"), // Mã nhân viên
@@ -71,7 +63,7 @@ export default function StaffAdd({
       Col: 11,
     },
     {
-      label: _l("Họ và tên"), // Họ tên
+      label: _l("Họ"), // Họ tên
       required: true,
       Col: 11,
       control: [
@@ -79,19 +71,15 @@ export default function StaffAdd({
           name: "StaffLastName",
           placeholder: _p("Nhập"),
         },
-        {
-          name: "StaffName",
-          placeholder: _p("Nhập"),
-        },
       ],
     },
     {
-      label: _l("Tên đầy đủ"), // Họ tên
+      label: _l("Tên"), // Họ tên
       required: true,
       Col: 11,
       control: [
         {
-          name: "StaffFullName",
+          name: "StaffName",
           placeholder: _p("Nhập"),
         },
       ],
@@ -103,9 +91,8 @@ export default function StaffAdd({
       control: [
         {
           name: "OrgID",
-          accepter: checkEdit ? Input : SelectPicker,
+          accepter: SelectPicker,
           data: listOrg,
-          placeholder: checkEdit ? "" : _p("Chọn"),
           labelKey: "mnnt_NNTFullName",
           valueKey: "mnnt_NNTFullName",
         },
@@ -305,7 +292,6 @@ export default function StaffAdd({
           customerFormItem: (
             <div
               style={{
-                transform: "translateX(-150px)",
                 border: "2px solid",
                 display: "flex",
                 alignItems: "center",
@@ -335,7 +321,6 @@ export default function StaffAdd({
           StaffCodeUser: formValue.StaffCodeUser ? formValue.StaffCodeUser : "",
           StaffName: formValue.StaffName ? formValue.StaffName : "",
           StaffLastName: formValue.StaffLastName ? formValue.StaffLastName : "",
-          StaffFullName: formValue.StaffFullName ? formValue.StaffFullName : "",
           StaffAddress: formValue.StaffAddress ? formValue.StaffAddress : "",
           StaffPhone: formValue.StaffPhone ? formValue.StaffPhone : "",
           OrgID: NetWorkID,
@@ -359,81 +344,20 @@ export default function StaffAdd({
           },
         ],
       };
-      console.log(360, checkEdit);
-      if (checkEdit) {
-        staff_service
-          .update({ isNew: true, data: condition })
-          .then((resp: any) => {
-            if (resp.Success) {
-              toast.success(_t("Add SuccessFully"));
-              // onSuccess();
-              // setFormValue({});
-              // handleClose();
-            } else {
-              ShowError(resp.ErrorData);
-            }
-          });
-      } else {
-        console.log("a");
-      }
+      staff_service
+        .update({ isNew: true, data: condition })
+        .then((resp: any) => {
+          if (resp.Success) {
+            toast.success(_t("Add SuccessFully"));
+            // onSuccess();
+            // setFormValue({});
+            // handleClose();
+          } else {
+            ShowError(resp.ErrorData);
+          }
+        });
     }
   };
-
-  const render = () => {
-    setFormValue({
-      Staff_Staff: {
-        StaffCodeUser: data.StaffCodeUser,
-        StaffName: data.StaffName,
-        StaffLastName: data.StaffLastName,
-        StaffFullName: data.StaffFullName,
-        StaffAddress: data.StaffAddress,
-        StaffPhone: data.StaffPhone,
-        OrgID: NetWorkID,
-        Remark: data.Remark,
-        WorkingEndDate: new Date(data.WorkingEndDate),
-        WorkingStartDate: new Date(data.WorkingStartDate),
-        BirthPlace: data.BirthPlace,
-        UserID: data.UserID,
-        StaffType: data.StaffType,
-        GovIDType: data.GovIDType,
-        PermanentAddress: data.PermanentAddress,
-      },
-      Lst_Staff_MapDepartment: [
-        {
-          DepartmentCode: "",
-          PositionCode: "",
-        },
-      ],
-    });
-  };
-  useEffect(() => {
-    console.log(411, "a");
-    setFormValue({
-      Staff_Staff: {
-        StaffCodeUser: data.StaffCodeUser,
-        StaffName: data.StaffName,
-        StaffLastName: data.StaffLastName,
-        StaffFullName: data.StaffFullName,
-        StaffAddress: data.StaffAddress,
-        StaffPhone: data.StaffPhone,
-        OrgID: NetWorkID,
-        Remark: data.Remark,
-        WorkingEndDate: new Date(data.WorkingEndDate),
-        WorkingStartDate: new Date(data.WorkingStartDate),
-        BirthPlace: data.BirthPlace,
-        UserID: data.UserID,
-        StaffType: data.StaffType,
-        GovIDType: data.GovIDType,
-        PermanentAddress: data.PermanentAddress,
-      },
-      Lst_Staff_MapDepartment: [
-        {
-          DepartmentCode: "",
-          PositionCode: "",
-        },
-      ],
-    });
-  }, [checkEdit]);
   const body = () => {
     // if (flagProps === "delete") {
     //   return (
@@ -456,51 +380,46 @@ export default function StaffAdd({
   return (
     <>
       <div style={{ width: "100%", background: "#f6f6f6" }}>
-        {checkEdit ? null : (
-          <div
-            style={{
-              height: "60px",
-              background: "#fff",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              padding: "0 30px 0 30px",
-              boxShadow:
-                "rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px",
-            }}>
-            <div>
-              <Link to={`/${NetWorkID}/StaffNew`} style={{ color: "gray" }}>
-                Danh sách nhân viên
-              </Link>
-              <span style={{ margin: "0 10px 0 10px" }}>{">"}</span>
-              <Link to={"/"} style={{ color: "black" }}>
-                Thêm nhân viên
-              </Link>
-            </div>
-            <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
-              <Button
-                style={{ background: "green", color: "white" }}
-                onClick={handleSubmit}>
-                Lưu
-              </Button>
-              <Button
-                style={{ background: "green", color: "white" }}
-                onClick={handleSubmit}>
-                Lưu & Tạo mới
-              </Button>
-              <Link to={`/${NetWorkID}/StaffNew`}>
-                <Button>Hủy</Button>
-              </Link>
-            </div>
+        <div
+          style={{
+            height: "60px",
+            background: "#fff",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            padding: "0 30px 0 30px",
+            boxShadow:
+              "rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px",
+          }}>
+          <div>
+            <Link to={`/${NetWorkID}/StaffNew`} style={{ color: "gray" }}>
+              Danh sách nhân viên
+            </Link>
+            <span style={{ margin: "0 10px 0 10px" }}>{">"}</span>
+            <Link to={"/"} style={{ color: "black" }}>
+              Thêm nhân viên
+            </Link>
           </div>
-        )}
-
+          <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
+            <Button
+              style={{ background: "green", color: "white" }}
+              onClick={handleSubmit}>
+              Lưu
+            </Button>
+            <Button
+              style={{ background: "green", color: "white" }}
+              onClick={handleSubmit}>
+              Lưu & Tạo mới
+            </Button>
+            <Link to={`/${NetWorkID}/StaffNew`}>
+              <Button>Hủy</Button>
+            </Link>
+          </div>
+        </div>
         <div style={{ display: "flex", marginTop: "8px", background: "#fff" }}>
-          {checkEdit ? null : (
-            <div>
-              <InputUploadIMG />
-            </div>
-          )}
+          <div>
+            <InputUploadIMG />
+          </div>
           <div>{body()}</div>
         </div>
       </div>
