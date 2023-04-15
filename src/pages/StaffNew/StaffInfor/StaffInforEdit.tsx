@@ -27,8 +27,6 @@ import { ShowError } from "components/Dialogs/Dialogs";
 import useListOrg from "hooks/Select/useListOrg";
 import useSelectListGender from "hooks/Select/useSelectListGender";
 import useSelectListStaffType from "hooks/Select/useSelectListStaffType";
-import MapListItems from "components/StafffNewDesign/mapListDepartment/MapListItems";
-import Maplist from "components/StafffNewDesign/MapList";
 import { useListGovIDType } from "hooks/Select/useListGovIDType";
 import { FormItemInterface } from "components/interface";
 import { convertDate } from "utils/date";
@@ -43,6 +41,8 @@ export default function StaffInforEdit({ onSuccess }: any) {
   const { staffCode } = useParams();
   const NetWorkID: string = `${import.meta.env.VITE_NETWORK_FIX}`;
   const checkEdit = useSelector((state: any) => state.ui.checkEdit);
+  const dataIMG = useSelector((state: any) => state.ui.dataImg);
+  console.log(45, dataIMG);
   const _l = useLocalization("Staff_Reward_Edit");
   const _t = useLocalization("toast");
   const _p = useLocalization("Placeholder");
@@ -395,6 +395,12 @@ export default function StaffInforEdit({ onSuccess }: any) {
         PermanentAddress: formValue.PermanentAddress
           ? formValue.PermanentAddress
           : "",
+        AvatarFilePath: dataIMG.FilePath ? dataIMG.FilePath : "",
+        AvatarUrl: dataIMG.Url ? dataIMG.Url : "",
+        AvatarFileBase64: null,
+        AvatarFileName: dataIMG.FileName ? dataIMG.FileName : "",
+        FlagFileUpload: "1",
+        AttFileId: dataIMG.AttFileId ? dataIMG.AttFileId : "",
       };
       staff_service
         .update({
@@ -419,7 +425,7 @@ export default function StaffInforEdit({ onSuccess }: any) {
 
   const render = () => {
     setFormValue({
-      StaffCodeUser: data.Staff_Staff.StaffCodeUser,
+      StaffCodeUser: data?.Staff_Staff.StaffCodeUser,
       StaffName: data.Staff_Staff.StaffName,
       StaffLastName: data.Staff_Staff.StaffLastName,
       StaffFullName: data.Staff_Staff.StaffFullName,

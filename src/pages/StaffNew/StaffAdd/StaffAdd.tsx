@@ -20,11 +20,12 @@ import { ShowError } from "components/Dialogs/Dialogs";
 import useListOrg from "hooks/Select/useListOrg";
 import useSelectListGender from "hooks/Select/useSelectListGender";
 import useSelectListStaffType from "hooks/Select/useSelectListStaffType";
-import MapListItems from "components/StafffNewDesign/mapListDepartment/MapListItems";
+import MapListItems from "components/StafffNewDesign/mapListDepartment/MapListDepartmentItem";
 import Maplist from "components/StafffNewDesign/MapList";
 import { useListGovIDType } from "hooks/Select/useListGovIDType";
 import { FormItemInterface } from "components/interface";
 import { useSelector } from "react-redux";
+import { type } from "os";
 
 type Props = {
   flag?: string;
@@ -32,6 +33,14 @@ type Props = {
   onSuccess?: Function;
   uuid?: string;
 };
+
+type Img = {
+  Url?: string;
+  FilePath?: string;
+  AttFileId: string;
+  FileName: string;
+};
+
 export default function StaffAdd({ flag, code, onSuccess, uuid }: Props) {
   const NetWorkID: string = `${import.meta.env.VITE_NETWORK_FIX}`;
   const checkEdit = useSelector((state: any) => state.ui.checkEdit);
@@ -43,7 +52,7 @@ export default function StaffAdd({ flag, code, onSuccess, uuid }: Props) {
   const [formValue, setFormValue] = useState({} as StaffAddType);
   const selectListStaff = useSelectListStaff();
   const listTypeID = useListGovIDType();
-
+  const [imgAPI, setIMGApi] = useState<Img>();
   const listDepartment = useSelectListDepartment();
   const listOrg = useListOrg();
   const listPosition = useSelectListPosition();
@@ -334,14 +343,20 @@ export default function StaffAdd({ flag, code, onSuccess, uuid }: Props) {
           PermanentAddress: formValue.PermanentAddress
             ? formValue.PermanentAddress
             : "",
+          AvatarFilePath: null,
+          AvatarUrl: imgAPI?.Url,
+          AvatarFileBase64: null,
+          AvatarFileName: imgAPI?.FileName,
+          FlagFileUpload: "1",
+          AttFileId: imgAPI?.AttFileId,
         },
         Lst_Staff_MapDepartment: [
-          {
-            DepartmentCode: formValue.DepartmentCode
-              ? formValue.DepartmentCode
-              : "",
-            PositionCode: formValue.PositionCode ? formValue.PositionCode : "",
-          },
+          // {
+          //   DepartmentCode: formValue.DepartmentCode
+          //     ? formValue.DepartmentCode
+          //     : "",
+          //   PositionCode: formValue.PositionCode ? formValue.PositionCode : "",
+          // },
         ],
       };
       staff_service
@@ -418,7 +433,7 @@ export default function StaffAdd({ flag, code, onSuccess, uuid }: Props) {
         </div>
         <div style={{ display: "flex", marginTop: "8px", background: "#fff" }}>
           <div>
-            <InputUploadIMG />
+            <InputUploadIMG setIMGApi={setIMGApi} />
           </div>
           <div>{body()}</div>
         </div>

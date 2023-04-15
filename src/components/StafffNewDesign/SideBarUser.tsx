@@ -7,6 +7,8 @@ import {
   FaMailchimp,
   FaPhone,
 } from "react-icons/fa";
+import { useSelector } from "react-redux";
+import InputUploadIMG from "./InputUploadIMG";
 
 export default function SideBarUser({
   dataStaff,
@@ -16,6 +18,7 @@ export default function SideBarUser({
   dataStaffDPM: any;
 }) {
   const _l = useLocalization("StaffTable");
+  const checkEdit = useSelector((state: any) => state.ui.checkEdit);
   return (
     <div
       style={{
@@ -24,14 +27,23 @@ export default function SideBarUser({
         padding: "25px 20px 25px 20px",
       }}>
       <div style={{ display: "flex", justifyContent: "center" }}>
-        <Avatar
-          style={{ height: "100px", width: "100px", fontSize: "30px" }}
-          circle
-          src={dataStaff.AvatarUrl ? dataStaff.AvatarUrl : dataStaff.AvatarUrl}
-          text={`${
-            dataStaff.AvatarUrl ? dataStaff.AvatarUrl : dataStaff.StaffName
-          }`}
-        />
+        {checkEdit ? (
+          <InputUploadIMG
+            imgStaff={dataStaff.AvatarUrl}
+            checkUpdate={checkEdit}
+          />
+        ) : (
+          <Avatar
+            style={{ height: "100px", width: "100px", fontSize: "30px" }}
+            circle
+            src={
+              dataStaff.AvatarUrl ? dataStaff.AvatarUrl : dataStaff.AvatarUrl
+            }
+            text={`${
+              dataStaff.AvatarUrl ? dataStaff.AvatarUrl : dataStaff.StaffName
+            }`}
+          />
+        )}
       </div>
       <h3 style={{ textAlign: "center", fontSize: "16px", padding: "5px 0" }}>
         {dataStaff.StaffFullName}

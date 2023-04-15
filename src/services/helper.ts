@@ -6,12 +6,11 @@ const AppAgent: string = `${import.meta.env.VITE_AGENT}`;
 const GwUserCode: string = `${import.meta.env.VITE_GW_USER}`;
 const GwUserPassword: string = `${import.meta.env.VITE_GW_USER_PW}`;
 
-console.log(API_BASE_URL, AppAgent, GwUserCode, GwUserPassword);
+// console.log(API_BASE_URL, AppAgent, GwUserCode, GwUserPassword);
 
 const postWithHeader = async (url: string, headers: any, params: any) => {
   try {
     if (!params) params = {};
-
     const requestOptions = {
       method: "POST",
       headers: headers,
@@ -90,13 +89,32 @@ const post = async (url: string, params: any) => {
 
   return postWithHeader(url, headers, params);
 };
+
+const UploadWithHeader = async (url: string, headers: any, params: any) => {
+  try {
+    if (!params) params = {};
+    var formdata = new FormData();
+
+    formdata.append("file", params, params?.name);
+
+    const requestOptions = {
+      method: "POST",
+      headers: headers,
+      body: formdata,
+    };
+    let fullUrl = url.indexOf("http") === 0 ? url : API_BASE_URL + "/" + url;
+    const response = await fetch(fullUrl, requestOptions);
+    const data = await response.json();
+    return data;
+  } catch (error: any) {
+    toast.error(error.message || "Failed");
+  }
+};
 const postFile = async (url: string, params: any) => {
   const { token } = store.getState().auth;
   const { NetworkId, OrgId } = store.getState().orgInfo;
 
   let headers = {
-    // "Content-Type": "application/json",
-    "Content-Type": "multipart/form-data",
     Authorization: token ? `Bearer ${token}` : "",
     AppAgent: AppAgent,
     GwUserCode: GwUserCode,
@@ -105,7 +123,7 @@ const postFile = async (url: string, params: any) => {
     OrgId: OrgId,
   };
 
-  return postWithHeaders(url, headers, params);
+  return UploadWithHeader(url, headers, params.data);
 };
 
 const get = async (url: string, params: any) => {

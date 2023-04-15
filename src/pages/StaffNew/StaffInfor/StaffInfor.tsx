@@ -17,6 +17,7 @@ import { Button } from "rsuite";
 import staff_service from "services/Staff/staff_service";
 import { setCheckEdit, setData } from "store/reducers/ui";
 import StaffInforEdit from "./StaffInforEdit";
+import { useSelector } from "react-redux";
 
 export default function StaffInfor() {
   const _m = useLocalization("More");
@@ -27,6 +28,7 @@ export default function StaffInfor() {
   const dispatch = useDispatch();
   const nav = useNavigate();
   const _t = useLocalization("toast");
+  const dataEdit = useSelector((state: any) => state.ui.data);
   const fetchData = async () => {
     const resp = await staff_service.getByStaffCode(staffCode as string);
     setDataStaff(resp.Data?.Staff_Staff);
@@ -74,6 +76,9 @@ export default function StaffInfor() {
     fetchData();
     dispatch(setCheckEdit(false));
   }, []);
+  useEffect(() => {
+    fetchData();
+  }, [dataEdit]);
   return (
     <>
       {dataStaff === undefined ? (

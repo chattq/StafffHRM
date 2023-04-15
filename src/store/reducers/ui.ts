@@ -27,6 +27,7 @@ export interface UiState {
   sidebarSkin: string;
   checkEdit: boolean;
   data: any;
+  dataImg: any;
 }
 
 const initialState: UiState = {
@@ -45,6 +46,7 @@ const initialState: UiState = {
   layoutFixed: true,
   checkEdit: false,
   data: [],
+  dataImg: [],
 };
 
 //addWindowClass('layout-footer-fixed');
@@ -58,6 +60,9 @@ export const uiSlice = createSlice({
     },
     setData: (state, action) => {
       state.data = action.payload;
+    },
+    setDataImg: (state, action) => {
+      state.dataImg = action.payload;
     },
     toggleSidebarMenu: (state) => {
       state.menuSidebarCollapsed = !state.menuSidebarCollapsed;
@@ -157,6 +162,7 @@ export const {
   toggleLayoutFixed,
   setCheckEdit,
   setData,
+  setDataImg,
 } = uiSlice.actions;
 
 export default uiSlice.reducer;
