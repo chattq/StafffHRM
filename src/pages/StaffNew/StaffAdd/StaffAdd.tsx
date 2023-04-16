@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Button, Toggle } from "rsuite";
 import Avatar from "components/Avatar";
@@ -20,18 +20,19 @@ import { ShowError } from "components/Dialogs/Dialogs";
 import useListOrg from "hooks/Select/useListOrg";
 import useSelectListGender from "hooks/Select/useSelectListGender";
 import useSelectListStaffType from "hooks/Select/useSelectListStaffType";
-import MapListItems from "components/StafffNewDesign/mapListDepartment/MapListDepartmentItem";
-import Maplist from "components/StafffNewDesign/MapList";
+import { v4 as uuid } from "uuid";
 import { useListGovIDType } from "hooks/Select/useListGovIDType";
 import { FormItemInterface } from "components/interface";
 import { useSelector } from "react-redux";
 import { type } from "os";
+import MapListDepartmentItem from "components/StafffNewDesign/mapListDepartment/MapListDepartmentItem";
+import useSelectStorePosition from "hooks/Select/useSelectStorePosition";
+import useSelectStoreDepartment from "hooks/Select/useSelectStoreDepartment";
 
 type Props = {
   flag?: string;
   code?: any;
   onSuccess?: Function;
-  uuid?: string;
 };
 
 type Img = {
@@ -41,7 +42,7 @@ type Img = {
   FileName: string;
 };
 
-export default function StaffAdd({ flag, code, onSuccess, uuid }: Props) {
+export default function StaffAdd({ flag, code, onSuccess }: Props) {
   const NetWorkID: string = `${import.meta.env.VITE_NETWORK_FIX}`;
   const checkEdit = useSelector((state: any) => state.ui.checkEdit);
   const _l = useLocalization("Staff_Reward_Edit");
@@ -58,6 +59,14 @@ export default function StaffAdd({ flag, code, onSuccess, uuid }: Props) {
   const listPosition = useSelectListPosition();
   const listGender = useSelectListGender();
   const staffType = useSelectListStaffType();
+  const [DP, setDP] = useState();
+  const [dataDP, SetDataDP] = useState();
+  const selectListDepartment: any[] = useSelectStoreDepartment();
+  const selectListPosition: any[] = useSelectStorePosition();
+  useEffect(() => {
+    const newArr = [...selectListDepartment, ...selectListPosition];
+    newArr.map((item) => SetDataDP(item));
+  }, []);
 
   const listFormItem: FormItemInterface[] = [
     {
@@ -194,24 +203,11 @@ export default function StaffAdd({ flag, code, onSuccess, uuid }: Props) {
       label: _l("Phòng ban"),
       required: true,
       Col: 11,
-      control: [
-        {
-          name: "DepartmentCode",
-          accepter: SelectPicker,
-          placeholder: _l("Phòng ban"),
-          data: listDepartment,
-          labelKey: "DepartmentName",
-          valueKey: "DepartmentCode",
-        },
-        {
-          name: "PositionCode",
-          accepter: SelectPicker,
-          placeholder: _l("Phòng ban"),
-          data: listPosition,
-          labelKey: "PositionName",
-          valueKey: "PositionCode",
-        },
-      ],
+      customComponent: (
+        <div>
+          <MapListDepartmentItem item={dataDP} flag="create" setDP={setDP} />
+        </div>
+      ),
     },
     {
       label: _l("DOB"), // Th
@@ -350,14 +346,7 @@ export default function StaffAdd({ flag, code, onSuccess, uuid }: Props) {
           FlagFileUpload: "1",
           AttFileId: imgAPI?.AttFileId,
         },
-        Lst_Staff_MapDepartment: [
-          // {
-          //   DepartmentCode: formValue.DepartmentCode
-          //     ? formValue.DepartmentCode
-          //     : "",
-          //   PositionCode: formValue.PositionCode ? formValue.PositionCode : "",
-          // },
-        ],
+        Lst_Staff_MapDepartment: DP,
       };
       staff_service
         .update({ isNew: true, data: condition })
@@ -374,13 +363,6 @@ export default function StaffAdd({ flag, code, onSuccess, uuid }: Props) {
     }
   };
   const body = () => {
-    // if (flagProps === "delete") {
-    //   return (
-    //     <strong className="delete-text">
-    //       {_t("do you want to delete the selected items ?")}
-    //     </strong>
-    //   );
-    // } else {
     return (
       <FormValidate
         ref={formRef}

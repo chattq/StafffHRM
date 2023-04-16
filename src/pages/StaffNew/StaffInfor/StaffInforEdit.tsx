@@ -30,6 +30,8 @@ import useSelectListStaffType from "hooks/Select/useSelectListStaffType";
 import { useListGovIDType } from "hooks/Select/useListGovIDType";
 import { FormItemInterface } from "components/interface";
 import { convertDate } from "utils/date";
+import { v4 as uuid } from "uuid";
+import MapListDepartmentItem from "components/StafffNewDesign/mapListDepartment/MapListDepartmentItem";
 
 export default function StaffInforEdit({ onSuccess }: any) {
   const dataEdit = useSelector((state: any) => state.ui.data);
@@ -41,27 +43,27 @@ export default function StaffInforEdit({ onSuccess }: any) {
   const { staffCode } = useParams();
   const NetWorkID: string = `${import.meta.env.VITE_NETWORK_FIX}`;
   const checkEdit = useSelector((state: any) => state.ui.checkEdit);
-  const dataIMG = useSelector((state: any) => state.ui.dataImg);
-  console.log(45, dataIMG);
   const _l = useLocalization("Staff_Reward_Edit");
   const _t = useLocalization("toast");
   const _p = useLocalization("Placeholder");
   const formRef: any = useRef(null);
   const [formValue, setFormValue] = useState({} as any);
-  const selectListStaff = useSelectListStaff();
   const listTypeID = useListGovIDType();
-  const listDepartment = useSelectListDepartment();
+  const [DP, setDP] = useState();
+  const [updateDP, seUpdateDp] = useState();
+
   const listOrg = useListOrg();
-  const listPosition = useSelectListPosition();
   const listGender = useSelectListGender();
   const staffType = useSelectListStaffType();
-
   const fetchData = async () => {
     const resp = await staff_service.getByStaffCode(staffCode as string);
     setDataFull(resp.Data.Staff_Staff);
     dispatch(setData(resp.Data));
     return resp;
   };
+  useEffect(() => {
+    fetchData();
+  }, []);
   const listFormItem: FormItemInterface[] = [
     {
       label: _l("Mã nhân viên"), // Mã nhân viên
@@ -214,24 +216,16 @@ export default function StaffInforEdit({ onSuccess }: any) {
       label: _l("Phòng ban"),
       required: true,
       Col: 11,
-      control: [
-        {
-          name: "DepartmentCode",
-          accepter: SelectPicker,
-          placeholder: _l("Phòng ban"),
-          data: listDepartment,
-          labelKey: "DepartmentName",
-          valueKey: "DepartmentCode",
-        },
-        {
-          name: "PositionCode",
-          accepter: SelectPicker,
-          placeholder: _l("Phòng ban"),
-          data: listPosition,
-          labelKey: "PositionName",
-          valueKey: "PositionCode",
-        },
-      ],
+      customComponent: (
+        <div>
+          <MapListDepartmentItem
+            itemUpdate={updateDP}
+            flag="update"
+            setDP={setDP}
+            id={uuid()}
+          />
+        </div>
+      ),
     },
     {
       label: _l("DOB"), // Th
@@ -395,19 +389,13 @@ export default function StaffInforEdit({ onSuccess }: any) {
         PermanentAddress: formValue.PermanentAddress
           ? formValue.PermanentAddress
           : "",
-        AvatarFilePath: dataIMG.FilePath ? dataIMG.FilePath : "",
-        AvatarUrl: dataIMG.Url ? dataIMG.Url : "",
-        AvatarFileBase64: null,
-        AvatarFileName: dataIMG.FileName ? dataIMG.FileName : "",
-        FlagFileUpload: "1",
-        AttFileId: dataIMG.AttFileId ? dataIMG.AttFileId : "",
       };
       staff_service
         .update({
           isNew: false,
           data: {
             Staff_Staff: condition,
-            Lst_Staff_MapDepartment: [],
+            Lst_Staff_MapDepartment: DP,
             Lst_Staff_InfoDynamicField: null,
           },
         })
@@ -451,6 +439,7 @@ export default function StaffInforEdit({ onSuccess }: any) {
 
   useEffect(() => {
     render();
+    seUpdateDp(data.Staff_MapDepartment);
   }, [checkEdit]);
   const body = () => {
     return (

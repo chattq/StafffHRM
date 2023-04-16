@@ -1,5 +1,4 @@
 import { ShowError } from "components/Dialogs/Dialogs";
-import MoreComponent from "components/HeaderComponent/MoreComponent";
 import SideBarUser from "components/StafffNewDesign/SideBarUser";
 import { MoreInterface } from "components/interface";
 import { useLocalization } from "hooks/useLocalization";
@@ -18,6 +17,8 @@ import staff_service from "services/Staff/staff_service";
 import { setCheckEdit, setData } from "store/reducers/ui";
 import StaffInforEdit from "./StaffInforEdit";
 import { useSelector } from "react-redux";
+import MoreComponentStaff from "components/StafffNewDesign/MoreComponentStaff";
+import ModalStaffEdit from "components/StafffNewDesign/ModalStaffEdit";
 
 export default function StaffInfor() {
   const _m = useLocalization("More");
@@ -26,9 +27,9 @@ export default function StaffInfor() {
   const [dataStaff, setDataStaff] = useState([]);
   const [dataStaffDPM, setDataStaffDPM] = useState([]);
   const dispatch = useDispatch();
-  const nav = useNavigate();
-  const _t = useLocalization("toast");
   const dataEdit = useSelector((state: any) => state.ui.data);
+
+  const checkEdit = useSelector((state: any) => state.ui.checkEdit);
   const fetchData = async () => {
     const resp = await staff_service.getByStaffCode(staffCode as string);
     setDataStaff(resp.Data?.Staff_Staff);
@@ -41,44 +42,16 @@ export default function StaffInfor() {
     setCheck(false);
     dispatch(setCheckEdit(true));
   };
-  const handleDeleteStaff = async (code: any) => {
-    const resp = await staff_service.remove({
-      StaffCode: code,
-      OrgID: NetWorkID,
-    });
-    if (resp.Success) {
-      toast.success(_t("Delete SuccessFully"));
-      nav(`/${NetWorkID}/StaffNew`);
-    } else {
-      ShowError(resp.ErrorData);
-    }
-  };
 
-  const listButton: MoreInterface[] = [
-    {
-      label: _m("Xóa"),
-      event: () => handleDeleteStaff(staffCode as any),
-    },
-    {
-      label: _m("Nghỉ việc"),
-      event: () => {
-        console.log("Nghỉ việc");
-      },
-    },
-    {
-      label: _m("Tạm dừng"),
-      event: () => {
-        console.log("Tạm dừng");
-      },
-    },
-  ];
+  const handleOff = () => {};
+
+  // useEffect(() => {
+  //   fetchData();
+  // }, [dataEdit]);
   useEffect(() => {
     fetchData();
     dispatch(setCheckEdit(false));
   }, []);
-  useEffect(() => {
-    fetchData();
-  }, [dataEdit]);
   return (
     <>
       {dataStaff === undefined ? (
@@ -113,8 +86,10 @@ export default function StaffInfor() {
               </Link>
             </div>
             <div style={{ display: "flex", gap: "10px" }}>
-              <Button onClick={handleChangeEdit}>Chỉnh sửa</Button>
-              <MoreComponent listButton={listButton} />
+              {checkEdit ? null : (
+                <Button onClick={handleChangeEdit}>Chỉnh sửa</Button>
+              )}
+              <MoreComponentStaff />
             </div>
           </div>
           <div

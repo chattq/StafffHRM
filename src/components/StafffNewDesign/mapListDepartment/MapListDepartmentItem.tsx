@@ -3,7 +3,7 @@ import useSelectListPosition from "hooks/Select/useSelectListPosition";
 import useSelectStoreDepartment from "hooks/Select/useSelectStoreDepartment";
 import useSelectStorePosition from "hooks/Select/useSelectStorePosition";
 import React, { useState, useEffect, FC, memo, useRef } from "react";
-import { FiMinus, FiPlus, FiTrash } from "react-icons/fi";
+import { FiPlus, FiTrash } from "react-icons/fi";
 import { Button, Col, Form, IconButton, Row, SelectPicker } from "rsuite";
 
 interface MapListDepartmentInterface {
@@ -13,13 +13,16 @@ interface MapListDepartmentInterface {
 }
 
 type Props = {
-  item?: MapListDepartmentInterface;
+  item?: any;
   index?: number;
   // handleAdd?: Function;
   // handleRemove?: Function;
   // handleChange?: Function;
   flag?: string;
   showButton?: boolean;
+  setDP: any;
+  itemUpdate?: any;
+  id?: any;
 };
 
 const MapListDepartmentItem: FC<Props> = ({
@@ -30,22 +33,37 @@ const MapListDepartmentItem: FC<Props> = ({
   // handleChange,
   flag,
   showButton = true,
+  itemUpdate,
+  setDP,
+  id,
 }: Props) => {
-  const formRef: any = useRef();
-  const [formValue, setFormValue] = useState({
-    DepartmentCode: item?.DepartmentCode,
-    PositionCode: item?.PositionCode,
-  } as any);
-
   const selectListDepartment: any[] = useSelectStoreDepartment();
   const selectListPosition: any[] = useSelectStorePosition();
+  const formValue = {
+    DepartmentCode: "",
+    FlagHeadDPM: null,
+    LogLUBy: "",
+    LogLUDTimeUTC: "",
+    NetworkID: "",
+    OrgID: "",
+    PositionCode: "",
+    StaffCode: "",
+    StaffRole: "",
+    md_DepartmentName: "",
+    mp_PositionName: "",
+    ss_StaffCodeUser: null,
+    ss_StaffName: null,
+  };
+  const [selectList, setSelectList] = useState([formValue]);
 
-  const [selectList, setSelectList] = useState([
-    { DepartmentCode: "", PositionCode: "" },
-  ]);
+  useEffect(() => {
+    if (itemUpdate) {
+      setSelectList(itemUpdate);
+    }
+  }, [itemUpdate]);
 
   const handleAdd = () => {
-    setSelectList([...selectList, { DepartmentCode: "", PositionCode: "" }]);
+    setSelectList([formValue, ...selectList]);
   };
 
   const handleRemove = (index: number) => {
@@ -63,15 +81,12 @@ const MapListDepartmentItem: FC<Props> = ({
     const list: any = [...selectList];
     list[index][type] = value;
     setSelectList(list);
+    setDP(list);
   };
-
-  useEffect(() => {
-    setFormValue(item);
-  }, [item]);
 
   return (
     <div className="map-department-item">
-      {selectList.map((item, index) => (
+      {selectList.map((item: any, index: any) => (
         <div key={index} className="list-select d-flex">
           <SelectPicker
             data={selectListDepartment}
@@ -81,9 +96,11 @@ const MapListDepartmentItem: FC<Props> = ({
             }
             valueKey="DepartmentCode"
             labelKey="DepartmentName"
-            style={{ width: "150px" }}
+            style={{ width: "135px", marginTop: "10px" }}
           />
-          <span style={{ paddingLeft: 10, paddingRight: 10 }}>-</span>
+          <span style={{ paddingLeft: 10, paddingRight: 10, paddingTop: 17 }}>
+            -
+          </span>
           <SelectPicker
             data={selectListPosition}
             value={item.PositionCode}
@@ -92,10 +109,21 @@ const MapListDepartmentItem: FC<Props> = ({
             }
             valueKey="PositionCode"
             labelKey="PositionName"
-            style={{ width: "150px" }}
+            style={{ width: "135px", marginTop: "10px" }}
           />
           <IconButton
-            icon={index === 0 ? <FiPlus /> : <FiMinus />}
+            style={{
+              border: "none",
+              background: "transparent",
+              marginTop: "10px",
+            }}
+            icon={
+              index === 0 ? (
+                <FiPlus style={{ color: "green", fontSize: "20px" }} />
+              ) : (
+                <FiTrash style={{ color: "red", fontSize: "18px" }} />
+              )
+            }
             onClick={() => (index === 0 ? handleAdd() : handleRemove(index))}
           />
         </div>

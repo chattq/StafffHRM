@@ -1,13 +1,56 @@
-import TableLabor from "components/StafffNewDesign/TableLabor";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FaUser, FaUsers } from "react-icons/fa";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
-import Mst_RelativeInfo_service from "services/Staff/Mst_RelativeInfo_service";
 import StaffInforFamily from "../StaffInforFamily/StaffInforFamily";
+import ModalStaffEdit from "components/StafffNewDesign/ModalStaffEdit";
+import { useParams } from "react-router-dom";
+import staff_service from "services/Staff/staff_service";
+
+interface History {
+  HistDate?: string;
+  LogLUDTimeUTC?: string;
+  StatusDesc?: string;
+  ReasonDesc?: string;
+}
 
 export default function StaffInforFull() {
   const data = useSelector((state: any) => state.ui.data);
+  const { staffCode } = useParams();
+  const [dataHistoryStaff, setHistoryStaff] = useState([]);
+  const [flag, setFlag] = useState("");
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => {
+    setOpen(true);
+    setFlag("history");
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const fetchDataFamily = async () => {
+    const resp = await staff_service.getHistoryStaffHistDate(
+      staffCode as string
+    );
+    setHistoryStaff(resp.Data);
+    return resp;
+  };
+  useEffect(() => {
+    fetchDataFamily();
+  }, []);
+  const dataHistory = () => {
+    return (
+      <>
+        {dataHistoryStaff.map((td: History, index: number) => (
+          <tr key={index}>
+            <td>{td.HistDate}</td>
+            <td>{td.StatusDesc}</td>
+            <td>{td.ReasonDesc}</td>
+            <td>{td.LogLUDTimeUTC}</td>
+          </tr>
+        ))}
+      </>
+    );
+  };
 
   return (
     <>
@@ -114,16 +157,45 @@ export default function StaffInforFull() {
                 <p>{data?.Staff_Staff?.WorkingStartDate}</p>
               )}
               {/* nghỉ việc */}
+
               {data?.Staff_Staff?.WorkingEndDate === null ? (
                 <p>{`---`}</p>
               ) : (
                 <p>{data?.Staff_Staff?.WorkingEndDate}</p>
               )}
-              {data?.Staff_Staff?.StaffStatus === "ACTIVE" ? (
-                <p>{"Đang làm việc"}</p>
-              ) : (
-                <p>{"Đã nghỉ việc"}</p>
-              )}
+              <div
+                style={{
+                  display: "flex",
+                  marginTop: "4px",
+                  alignItems: "center",
+                }}>
+                {data?.Staff_Staff?.StaffStatus === "ACTIVE" ? (
+                  <p>{"Đang làm việc"}</p>
+                ) : (
+                  <p>{"Đã nghỉ việc"}</p>
+                )}
+                <ModalStaffEdit
+                  button={
+                    <div
+                      style={{
+                        border: "2px solid green",
+                        borderRadius: "5px",
+                        padding: "2px 8px",
+                        marginLeft: "15px",
+                        color: "green",
+                        cursor: "pointer",
+                      }}>
+                      Chi tiết
+                    </div>
+                  }
+                  data={dataHistoryStaff}
+                  handleClose={handleClose}
+                  handleOpen={handleOpen}
+                  dataTable={dataHistory}
+                  open={open}
+                  flag={flag}
+                />
+              </div>
             </div>
           </div>
           <div style={{ display: "flex" }}>

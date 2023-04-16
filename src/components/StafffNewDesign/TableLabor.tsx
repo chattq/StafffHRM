@@ -30,15 +30,17 @@ export default function TableLabor({
         </thead>
         {data !== null ? <tbody>{inforLabor}</tbody> : null}
       </Table>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "200px",
-        }}>
-        {data == (undefined || null) && <div>Không có dữ liệu</div>}
-      </div>
+      {data === (undefined || null) && (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "200px",
+          }}>
+          <div>Không có dữ liệu</div>
+        </div>
+      )}
     </div>
   );
 }

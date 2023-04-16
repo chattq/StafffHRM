@@ -6,6 +6,8 @@ import UploadFile_service from "services/Staff/UploadFile_service";
 import { BiCamera } from "react-icons/bi";
 import { useDispatch } from "react-redux";
 import { setDataImg } from "store/reducers/ui";
+import staff_service from "services/Staff/staff_service";
+import { useParams } from "react-router-dom";
 
 export default function InputUploadIMG({ setIMGApi, imgStaff }: any) {
   const imgRef = useRef<any>();
@@ -22,15 +24,24 @@ export default function InputUploadIMG({ setIMGApi, imgStaff }: any) {
     const fileFromLocal = event.target.files?.[0];
     setFile(fileFromLocal);
   };
-
+  const { staffCode } = useParams<string>();
   const fetchUpload = async () => {
     if (checkEdit && file) {
       const repsUpload = await UploadFile_service.UploadFile(file);
-      dispatch(setDataImg(repsUpload.Data));
+      await staff_service.upDateAvatar({
+        Staff_Staff: {
+          StaffCode: staffCode,
+          AvatarFilePath: repsUpload.Data.FilePath,
+          AvatarUrl: repsUpload.Data.Url,
+          AvatarFileBase64: null,
+          AvatarFileName: repsUpload.Data.FileName,
+          FlagFileUpload: "1",
+          AttFileId: repsUpload.Data.AttFileId,
+        },
+      });
     } else if (file) {
       const repsUpload = await UploadFile_service.UploadFile(file);
       setIMGApi(repsUpload?.Data);
-      console.log(34, repsUpload);
     }
   };
 

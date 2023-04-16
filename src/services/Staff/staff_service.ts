@@ -83,6 +83,12 @@ const removeMultiple = async (data: any) => {
     strJson: str,
   });
 };
+const upDateAvatar = async (data: any) => {
+  const str = JSON.stringify(data);
+  return await api.post("Staff_Staff/UpdateAvatar", {
+    strJson: str,
+  });
+};
 
 const exportExcel = async (data: any) => {
   return await api.post("Staff_Staff/Export", data);
@@ -162,4 +168,5 @@ export default {
   Paused,
   getCurrentUser,
   removeMultiple,
+  upDateAvatar,
 };
