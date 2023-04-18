@@ -27,13 +27,14 @@ export default function StaffInfor() {
   const [dataStaff, setDataStaff] = useState([]);
   const [dataStaffDPM, setDataStaffDPM] = useState([]);
   const dispatch = useDispatch();
-  const dataEdit = useSelector((state: any) => state.ui.data);
+  const dataEdit = useSelector((state: any) => state.ui.dataImg);
+  const dataUpdate = useSelector((state: any) => state.ui.dataUpdate);
 
   const checkEdit = useSelector((state: any) => state.ui.checkEdit);
   const fetchData = async () => {
     const resp = await staff_service.getByStaffCode(staffCode as string);
-    setDataStaff(resp.Data?.Staff_Staff);
-    setDataStaffDPM(resp.Data?.Staff_MapDepartment);
+    setDataStaff(resp.Data.Staff_Staff);
+    setDataStaffDPM(resp.Data.Staff_MapDepartment);
     dispatch(setData(resp.Data));
     return resp;
   };
@@ -43,15 +44,13 @@ export default function StaffInfor() {
     dispatch(setCheckEdit(true));
   };
 
-  const handleOff = () => {};
-
-  // useEffect(() => {
-  //   fetchData();
-  // }, [dataEdit]);
   useEffect(() => {
     fetchData();
     dispatch(setCheckEdit(false));
   }, []);
+  useEffect(() => {
+    fetchData();
+  }, [dataEdit, dataUpdate]);
   return (
     <>
       {dataStaff === undefined ? (

@@ -1,5 +1,6 @@
 import { ShowError } from "components/Dialogs/Dialogs";
 import ModalStaffEdit from "components/StafffNewDesign/ModalStaffEdit";
+import UploadFileStaff from "components/StafffNewDesign/UploadFileStaff";
 import { Textarea } from "components/input/Textarea";
 import useSelectListContractType from "hooks/Select/useSelectContractType";
 import { useLocalization } from "hooks/useLocalization";
@@ -8,6 +9,7 @@ import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { DatePicker, SelectPicker, Uploader } from "rsuite";
 import Staff_LaborContract_service from "services/Staff/Staff_LaborContract_service";
+import store from "store/store";
 import { convertDate } from "utils/date";
 import { dateRequiredRule, requiredRule } from "utils/validationRules";
 
@@ -28,6 +30,8 @@ export default function StaffLaborContractEdit({
   const [formValue, setFormValue] = useState({} as any);
   const [flagProps, setFlagProps] = useState(flag);
   const listContract = useSelectListContractType();
+  const [fileContract, setFileContract] = useState("" as any);
+  const [fileLaborUpdate, setFileLaborUpdate] = useState("" as any);
   const { staffCode } = useParams();
   const _l = useLocalization("ModalStaffEdit");
   const _t = useLocalization("toast");
@@ -38,8 +42,8 @@ export default function StaffLaborContractEdit({
     setFlagProps(flag as string);
   }, [uuid, flag]);
   const handleOpen = () => {
-    setFlagProps("update");
     setOpen(true);
+    setFlagProps("update");
   };
   const handleClose = () => {
     setFormValue({} as any);
@@ -95,8 +99,8 @@ export default function StaffLaborContractEdit({
       required: true,
       control: [
         {
-          data: listContract,
           rule: dateRequiredRule,
+          data: listContract,
           name: "ContactType",
           placeholder: _p("Chọn"),
           accepter: SelectPicker,
@@ -135,12 +139,17 @@ export default function StaffLaborContractEdit({
     },
     {
       label: _l("Upload"), // phòng ban
-      control: [
-        {
-          name: "ContractFileUrl",
-          accepter: Uploader,
-        },
-      ],
+      customComponent: (
+        <div style={{ width: 300 }}>
+          <UploadFileStaff
+            setFileContract={setFileContract}
+            fileLaborUpdate={fileLaborUpdate}
+            formValue={formValue}
+            setFormValue={setFormValue}
+            flag={flagProps}
+          />
+        </div>
+      ),
     },
   ];
 
@@ -184,12 +193,28 @@ export default function StaffLaborContractEdit({
           ExpirationDate: formValue.ExpirationDate
             ? convertDate(formValue.ExpirationDate)
             : "",
-          ContractFileUrl: formValue.ContractFileUrl
-            ? formValue.ContractFileUrl
-            : "",
+          ContractFileUrl: fileContract.Url
+            ? fileContract.Url
+            : formValue.ContractFileUrl,
+          ContractFilePath: fileContract.FilePath
+            ? fileContract.FilePath
+            : formValue.ContractFileUrl,
+          FlagFileUpload: fileContract.FlagFileUpload
+            ? fileContract.FlagFileUpload
+            : formValue.FlagFileUpload,
+          AttFileId: fileContract.AttFileId
+            ? fileContract.AttFileId
+            : formValue.AttFileId,
+          ContractFileName: fileContract.FileName
+            ? fileContract.FileName
+            : formValue.ContractFileName,
+          ContractFileSize: fileContract.FileSize
+            ? fileContract.FileSize
+            : formValue.ContractFileSize,
         };
-        console.log(195, condition);
+
         if (flagProps === "update") {
+          console.log("update", condition);
           Staff_LaborContract_service.update({
             isNew: true,
             data: condition,
@@ -205,6 +230,7 @@ export default function StaffLaborContractEdit({
           });
         }
         if (flag === "detail") {
+          console.log("update", condition);
           Staff_LaborContract_service.update({
             isNew: false,
             data: condition,
@@ -221,7 +247,7 @@ export default function StaffLaborContractEdit({
       }
     }
   };
-
+  console.log();
   const render = () => {
     if (flag === "detail") {
       setFormValue({
@@ -233,13 +259,22 @@ export default function StaffLaborContractEdit({
         RefCode: data.RefCode,
         EffectiveDate: new Date(data.EffectiveDate),
         ExpirationDate: new Date(data.ExpirationDate),
-        ContractFileUrl: data.ContractFileUrl,
         ContractCodeSys: data.ContractCodeSys,
+        ContractFileUrl: data.ContractFileUrl,
+        ContractFilePath: data.ContractFilePath,
+        FlagFileUpload: data.FlagFileUpload,
+        AttFileId: data.AttFileId,
+        ContractFileName: data.ContractFileName,
+        ContractFileSize: data.ContractFileSize,
       });
     }
   };
   useEffect(() => {
     render();
+    setFileLaborUpdate({
+      ContractFileName: data?.ContractFileName,
+      ContractFileUrl: data?.ContractFileUrl,
+    });
   }, [flag, uuid]);
   return (
     <>

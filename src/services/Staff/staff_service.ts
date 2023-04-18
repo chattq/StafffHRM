@@ -121,15 +121,15 @@ const getByStaffType = async (StaffType: string) => {
   });
 };
 
-const Active = async (data: StaffPropsStatus) => {
+const Active = async (data: any) => {
   return await api.post("Staff_Staff/Active", data);
 };
 
-const Inactive = async (data: StaffPropsStatus) => {
+const Inactive = async (data: any) => {
   return await api.post("Staff_Staff/InActive", data);
 };
 
-const Paused = async (data: StaffPropsStatus) => {
+const Paused = async (data: any) => {
   return await api.post("Staff_Staff/Pause", data);
 };
 

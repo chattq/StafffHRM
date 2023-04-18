@@ -4,23 +4,14 @@ import { FaUser, FaUsers } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import Mst_RelativeInfo_service from "services/Staff/Mst_RelativeInfo_service";
-import { setCheckEdit, setData } from "store/reducers/ui";
+import { setCheckEdit, setData, setDataUpdate } from "store/reducers/ui";
 import StaffInforFamily from "../StaffInforFamily/StaffInforFamily";
-import StaffAdd from "../StaffAdd/StaffAdd";
 import { Button, Input, Toggle } from "rsuite";
-import Avatar from "components/Avatar";
 import FormValidate from "components/FormValidate/FormValidate";
-import InputUploadIMG from "components/StafffNewDesign/InputUploadIMG";
 import { Textarea } from "components/input/Textarea";
-import useListTypeReward from "hooks/Select/useListReward";
-import useSelectListStaff from "hooks/Select/useSelectListStaff";
 import { useLocalization } from "hooks/useLocalization";
 import { AutoComplete, Checkbox, DatePicker, SelectPicker } from "rsuite";
 import { dateRequiredRule, requiredRule } from "utils/validationRules";
-import useSelectListDepartment from "hooks/Select/useSelectListDepartment";
-import useSelectListPosition from "hooks/Select/useSelectListPosition";
-import { StaffAddType } from "components/StafffNewDesign/TypeStaff";
 import staff_service from "services/Staff/staff_service";
 import { toast } from "react-toastify";
 import { ShowError } from "components/Dialogs/Dialogs";
@@ -33,7 +24,7 @@ import { convertDate } from "utils/date";
 import { v4 as uuid } from "uuid";
 import MapListDepartmentItem from "components/StafffNewDesign/mapListDepartment/MapListDepartmentItem";
 
-export default function StaffInforEdit({ onSuccess }: any) {
+export default function StaffInforEdit() {
   const dataEdit = useSelector((state: any) => state.ui.data);
   const [data, setDataFull] = useState(dataEdit);
   const dispatch = useDispatch();
@@ -49,9 +40,8 @@ export default function StaffInforEdit({ onSuccess }: any) {
   const formRef: any = useRef(null);
   const [formValue, setFormValue] = useState({} as any);
   const listTypeID = useListGovIDType();
-  const [DP, setDP] = useState();
-  const [updateDP, seUpdateDp] = useState();
-
+  const [updateDP, seUpdateDp] = useState([] as any);
+  const dataIMG = useSelector((state: any) => state.ui.dataImg);
   const listOrg = useListOrg();
   const listGender = useSelectListGender();
   const staffType = useSelectListStaffType();
@@ -64,12 +54,13 @@ export default function StaffInforEdit({ onSuccess }: any) {
   useEffect(() => {
     fetchData();
   }, []);
-  const listFormItem: FormItemInterface[] = [
+  const listFormItem1: FormItemInterface[] = [
     {
       label: _l("Mã nhân viên"), // Mã nhân viên
       required: true,
       control: [
         {
+          rule: requiredRule,
           disabled: true,
           name: "StaffCodeUser",
           placeholder: _p("Nhập"),
@@ -78,34 +69,37 @@ export default function StaffInforEdit({ onSuccess }: any) {
       Col: 11,
     },
     {
+      label: _l("Điện thoại"), // Họ tên
+      Col: 11,
+      control: [
+        {
+          name: "StaffPhone",
+          placeholder: _p("Nhập"),
+        },
+      ],
+    },
+
+    {
       label: _l("Họ và tên"), // Họ tên
       required: true,
       Col: 11,
       control: [
         {
           name: "StaffLastName",
+          rule: requiredRule,
           placeholder: _p("Họ"),
+          className: "w-5",
         },
         {
           name: "StaffName",
+          rule: requiredRule,
           placeholder: _p("Tên"),
-        },
-      ],
-    },
-    {
-      label: _l("Tên đầy đủ"), // Họ tên
-      required: true,
-      Col: 11,
-      control: [
-        {
-          name: "StaffFullName",
-          placeholder: _p("Nhập"),
+          className: "w-5",
         },
       ],
     },
     {
       label: _l("Email"), // Họ tên
-      required: true,
       Col: 11,
       control: [
         {
@@ -114,21 +108,7 @@ export default function StaffInforEdit({ onSuccess }: any) {
         },
       ],
     },
-    {
-      label: _l("OrgID"), // Họ tên
-      required: true,
-      Col: 11,
-      control: [
-        {
-          name: "OrgID",
-          accepter: checkEdit ? Input : SelectPicker,
-          data: listOrg,
-          placeholder: checkEdit ? "" : _p("Chọn"),
-          labelKey: "mnnt_NNTFullName",
-          valueKey: "mnnt_NNTFullName",
-        },
-      ],
-    },
+
     {
       label: _l("Loại"), // Họ tên
       required: true,
@@ -145,8 +125,57 @@ export default function StaffInforEdit({ onSuccess }: any) {
       ],
     },
     {
-      label: _l("Giới tính"), // Họ tên
+      label: _l("Địa chỉ hiện tại"), // Họ tên
       required: true,
+      Col: 11,
+      control: [
+        {
+          rule: requiredRule,
+          name: "StaffAddress",
+          placeholder: _p("Nhập"),
+        },
+      ],
+    },
+
+    {
+      label: _l("Phòng ban"),
+      required: true,
+      Col: 11,
+      customComponent: (
+        <div>
+          <MapListDepartmentItem
+            item={updateDP}
+            setDepartmentList={seUpdateDp}
+            flag="update"
+          />
+        </div>
+      ),
+    },
+    {
+      label: _l("DOB"), // Th
+      Col: 11,
+      control: [
+        {
+          name: "DBO",
+          placeholder: _p("Nhập"),
+          accepter: DatePicker,
+        },
+      ],
+    },
+
+    {
+      label: _l("Ghi chú"), // kinh nghiệm làm việc
+      Col: 11,
+      control: [
+        {
+          name: "Remark",
+          accepter: Textarea,
+          placeholder: _p("Nhập"),
+        },
+      ],
+    },
+    {
+      label: _l("Giới tính"), // Họ tên
       Col: 11,
       control: [
         {
@@ -159,12 +188,28 @@ export default function StaffInforEdit({ onSuccess }: any) {
         },
       ],
     },
+
     {
-      label: _l("Điện thoại"), // Họ tên
+      label: _l("OrgID"), // Họ tên
+      required: true,
       Col: 11,
       control: [
         {
-          name: "StaffPhone",
+          name: "OrgID",
+          accepter: checkEdit ? Input : SelectPicker,
+          data: listOrg,
+          placeholder: checkEdit ? "" : _p("Chọn"),
+          labelKey: "mnnt_NNTFullName",
+          valueKey: "mnnt_NNTFullName",
+        },
+      ],
+    },
+    {
+      label: _l("Nơi sinh"), // Họ tên
+      Col: 11,
+      control: [
+        {
+          name: "BirthPlace",
           placeholder: _p("Nhập"),
         },
       ],
@@ -180,27 +225,6 @@ export default function StaffInforEdit({ onSuccess }: any) {
       ],
     },
     {
-      label: _l("Nơi sinh"), // Họ tên
-      Col: 11,
-      control: [
-        {
-          name: "BirthPlace",
-          placeholder: _p("Nhập"),
-        },
-      ],
-    },
-    {
-      label: _l("Địa Chỉ"), // Họ tên
-      required: true,
-      Col: 11,
-      control: [
-        {
-          name: "StaffAddress",
-          placeholder: _p("Nhập"),
-        },
-      ],
-    },
-    {
       label: _l("Địa chỉ thường trú"), // Họ tên
       required: true,
       Col: 11,
@@ -209,44 +233,7 @@ export default function StaffInforEdit({ onSuccess }: any) {
           name: "PermanentAddress",
           accepter: Textarea,
           placeholder: _p("Nhập"),
-        },
-      ],
-    },
-    {
-      label: _l("Phòng ban"),
-      required: true,
-      Col: 11,
-      customComponent: (
-        <div>
-          <MapListDepartmentItem
-            itemUpdate={updateDP}
-            flag="update"
-            setDP={setDP}
-            id={uuid()}
-          />
-        </div>
-      ),
-    },
-    {
-      label: _l("DOB"), // Th
-      required: true,
-      Col: 11,
-      control: [
-        {
-          name: "DBO",
-          placeholder: _p("Nhập"),
-          accepter: DatePicker,
-        },
-      ],
-    },
-    {
-      label: _l("Ngày cấp"), // Th
-      Col: 11,
-      control: [
-        {
-          name: "DateOfIssue",
-          placeholder: _p("Nhập"),
-          accepter: DatePicker,
+          rule: requiredRule,
         },
       ],
     },
@@ -259,6 +246,30 @@ export default function StaffInforEdit({ onSuccess }: any) {
           name: "WorkingStartDate",
           placeholder: _p("Nhập"),
           accepter: DatePicker,
+          rule: dateRequiredRule,
+        },
+      ],
+    },
+    {
+      label: _l("Số giấy tờ"), // kinh nghiệm làm việc
+      required: true,
+      Col: 11,
+      control: [
+        {
+          name: "IDCardNumber",
+          placeholder: _p("Nhập"),
+          className: "w-5",
+          rule: requiredRule,
+        },
+        {
+          name: "GovIDType",
+          data: listTypeID,
+          accepter: SelectPicker,
+          placeholder: _p("Loại giấy tờ"),
+          labelKey: "GovIDTypeName",
+          valueKey: "GovIDType",
+          className: "w-5",
+          rule: requiredRule,
         },
       ],
     },
@@ -274,41 +285,15 @@ export default function StaffInforEdit({ onSuccess }: any) {
       ],
     },
     {
-      label: _l("Ghi chú"), // kinh nghiệm làm việc
+      label: _l("Ngày cấp"), // Th
+      required: true,
       Col: 11,
       control: [
         {
-          name: "Remark",
-          accepter: Textarea,
+          name: "DateOfIssue",
           placeholder: _p("Nhập"),
-        },
-      ],
-    },
-    {
-      label: _l("Nơi cấp"), // kinh nghiệm làm việc
-      Col: 11,
-      control: [
-        {
-          name: "PlaceOfIssue",
-          placeholder: _p("Nhập"),
-        },
-      ],
-    },
-    {
-      label: _l("Số giấy tờ"), // kinh nghiệm làm việc
-      Col: 11,
-      control: [
-        {
-          name: "IDCardNumber",
-          placeholder: _p("Nhập"),
-        },
-        {
-          name: "GovIDType",
-          data: listTypeID,
-          accepter: SelectPicker,
-          placeholder: _p("Loại giấy tờ"),
-          labelKey: "GovIDTypeName",
-          valueKey: "GovIDType",
+          accepter: DatePicker,
+          rule: dateRequiredRule,
         },
       ],
     },
@@ -350,6 +335,18 @@ export default function StaffInforEdit({ onSuccess }: any) {
         },
       ],
     },
+    {
+      label: _l("Nơi cấp"),
+      required: true,
+      Col: 11,
+      control: [
+        {
+          rule: requiredRule,
+          name: "PlaceOfIssue",
+          placeholder: _p("Nhập"),
+        },
+      ],
+    },
   ];
   const handleSubmit = () => {
     if (!formRef.current.check || !formRef.current) {
@@ -366,7 +363,6 @@ export default function StaffInforEdit({ onSuccess }: any) {
         PlaceOfIssue: formValue.PlaceOfIssue ? formValue.PlaceOfIssue : "",
         StaffName: formValue.StaffName ? formValue.StaffName : "",
         StaffLastName: formValue.StaffLastName ? formValue.StaffLastName : "",
-        StaffFullName: formValue.StaffFullName ? formValue.StaffFullName : "",
         StaffAddress: formValue.StaffAddress ? formValue.StaffAddress : "",
         StaffPhone: formValue.StaffPhone ? formValue.StaffPhone : "",
         StaffEmail: formValue.StaffEmail ? formValue.StaffEmail : "",
@@ -389,13 +385,28 @@ export default function StaffInforEdit({ onSuccess }: any) {
         PermanentAddress: formValue.PermanentAddress
           ? formValue.PermanentAddress
           : "",
+        AvatarFilePath: dataIMG.FilePath
+          ? dataIMG.FilePath
+          : formValue.AvatarFilePath,
+        AvatarUrl: dataIMG.Url ? dataIMG.Url : formValue.AvatarUrl,
+        AvatarFileName: dataIMG.FileName
+          ? dataIMG.FileName
+          : formValue.AvatarUrl,
+        AttFileId: dataIMG.AttFileId ? dataIMG.AttFileId : formValue.AttFileId,
+        FlagFileUpload: dataIMG.FlagFileUpload
+          ? dataIMG.FlagFileUpload
+          : formValue.FlagFileUpload,
       };
       staff_service
         .update({
           isNew: false,
           data: {
             Staff_Staff: condition,
-            Lst_Staff_MapDepartment: DP,
+            Lst_Staff_MapDepartment:
+              updateDP[0].DepartmentCode === null ||
+              updateDP[0].PositionCode === null
+                ? []
+                : updateDP,
             Lst_Staff_InfoDynamicField: null,
           },
         })
@@ -404,6 +415,7 @@ export default function StaffInforEdit({ onSuccess }: any) {
             toast.success(_t("Chỉnh sửa nhân viên thành công"));
             fetchData();
             dispatch(setCheckEdit(false));
+            dispatch(setDataUpdate(resp));
           } else {
             ShowError(resp.ErrorData);
           }
@@ -416,7 +428,6 @@ export default function StaffInforEdit({ onSuccess }: any) {
       StaffCodeUser: data?.Staff_Staff.StaffCodeUser,
       StaffName: data.Staff_Staff.StaffName,
       StaffLastName: data.Staff_Staff.StaffLastName,
-      StaffFullName: data.Staff_Staff.StaffFullName,
       StaffAddress: data.Staff_Staff.StaffAddress,
       StaffPhone: data.Staff_Staff.StaffPhone,
       StaffEmail: data.Staff_Staff.StaffEmail,
@@ -434,12 +445,30 @@ export default function StaffInforEdit({ onSuccess }: any) {
       PlaceOfIssue: data.Staff_Staff.PlaceOfIssue,
       IDCardNumber: data.Staff_Staff.IDCardNumber,
       Gender: data.Staff_Staff.Gender,
+      AvatarFilePath: data.Staff_Staff.AvatarFilePath,
+      AvatarUrl: data.Staff_Staff.AvatarUrl,
+      AvatarFileName: data.Staff_Staff.AvatarFileName,
+      AttFileId: data.Staff_Staff.AttFileId,
+      FlagFileUpload: data.Staff_Staff.AttFileId,
     });
   };
 
   useEffect(() => {
     render();
-    seUpdateDp(data.Staff_MapDepartment);
+    if (data?.Staff_MapDepartment.length !== 0) {
+      const newArr = data?.Staff_MapDepartment.map((item: any) => ({
+        DepartmentCode: item.DepartmentCode,
+        PositionCode: item.PositionCode,
+      }));
+      seUpdateDp(newArr);
+    } else {
+      seUpdateDp([
+        {
+          DepartmentCode: "",
+          PositionCode: "",
+        },
+      ]);
+    }
   }, [checkEdit]);
   const body = () => {
     return (
@@ -448,7 +477,7 @@ export default function StaffInforEdit({ onSuccess }: any) {
         formValue={formValue}
         setFormValue={setFormValue}
         layout="vertical"
-        listItem={listFormItem}
+        listItem={listFormItem1}
       />
     );
   };

@@ -28,6 +28,7 @@ export interface UiState {
   checkEdit: boolean;
   data: any;
   dataImg: any;
+  dataUpdate: any;
 }
 
 const initialState: UiState = {
@@ -47,6 +48,7 @@ const initialState: UiState = {
   checkEdit: false,
   data: [],
   dataImg: [],
+  dataUpdate: [],
 };
 
 //addWindowClass('layout-footer-fixed');
@@ -60,6 +62,9 @@ export const uiSlice = createSlice({
     },
     setData: (state, action) => {
       state.data = action.payload;
+    },
+    setDataUpdate: (state, action) => {
+      state.dataUpdate = action.payload;
     },
     setDataImg: (state, action) => {
       state.dataImg = action.payload;
@@ -163,6 +168,7 @@ export const {
   setCheckEdit,
   setData,
   setDataImg,
+  setDataUpdate,
 } = uiSlice.actions;
 
 export default uiSlice.reducer;

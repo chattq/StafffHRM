@@ -1,5 +1,6 @@
 import { ShowError } from "components/Dialogs/Dialogs";
 import ModalStaffEdit from "components/StafffNewDesign/ModalStaffEdit";
+import UploadFileStaff from "components/StafffNewDesign/UploadFileStaff";
 import { Textarea } from "components/input/Textarea";
 import { useLocalization } from "hooks/useLocalization";
 import React, { useEffect, useRef, useState } from "react";
@@ -27,7 +28,8 @@ export default function StaffAppointEdit({
   const formRef: any = useRef(null);
   const [formValue, setFormValue] = useState({} as any);
   const [flagProps, setFlagProps] = useState(flag);
-
+  const [fileContract, setFileContract] = useState("" as any);
+  const [fileLaborUpdate, setFileLaborUpdate] = useState("" as any);
   const _l = useLocalization("ModalStaffEdit");
   const _t = useLocalization("toast");
   const _p = useLocalization("Placeholder");
@@ -62,7 +64,7 @@ export default function StaffAppointEdit({
       required: true,
       control: [
         {
-          name: "DecisionNo",
+          name: "md_DepartmentName",
           placeholder: _p("Nhập"),
         },
       ],
@@ -73,7 +75,7 @@ export default function StaffAppointEdit({
       control: [
         {
           rule: requiredRule,
-          name: "Position",
+          name: "ApprovalPosition",
           placeholder: _p("Nhập"),
         },
       ],
@@ -82,7 +84,7 @@ export default function StaffAppointEdit({
       label: _l("Số quyết định"), // số quyết dịnh
       control: [
         {
-          name: "Position",
+          name: "DecisionNo",
           placeholder: _p("Nhập"),
         },
       ],
@@ -91,7 +93,7 @@ export default function StaffAppointEdit({
       label: _l("Số tham chiếu"), // số tham chiếu
       control: [
         {
-          name: "Position",
+          name: "RefNo",
           placeholder: _p("Nhập"),
         },
       ],
@@ -106,17 +108,17 @@ export default function StaffAppointEdit({
         },
       ],
     },
-    // {
-    //   label: _l("Kinh nghiệm làm việc"), // kinh nghiệm làm việc
-    //   control: [
-    //     {
-    //       rule: requiredRule,
-    //       name: "Position",
-    //       placeholder: _p("Nhập"),
-    //       accepter: Uploader,
-    //     },
-    //   ],
-    // },
+    {
+      label: _l("Upload"), // kinh nghiệm làm việc
+      customComponent: (
+        <div style={{ width: 300 }}>
+          <UploadFileStaff
+            setFileContract={setFileContract}
+            fileLaborUpdate={fileLaborUpdate}
+          />
+        </div>
+      ),
+    },
   ];
 
   const handleSubmit = () => {

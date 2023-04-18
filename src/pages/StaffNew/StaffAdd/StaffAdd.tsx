@@ -1,18 +1,13 @@
 import React, { useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { Button, Toggle } from "rsuite";
-import Avatar from "components/Avatar";
 import FormValidate from "components/FormValidate/FormValidate";
 import InputUploadIMG from "components/StafffNewDesign/InputUploadIMG";
 import { Textarea } from "components/input/Textarea";
-import useListTypeReward from "hooks/Select/useListReward";
-import useSelectListStaff from "hooks/Select/useSelectListStaff";
 import { useLocalization } from "hooks/useLocalization";
 import { useMemo, useRef, useState } from "react";
 import { AutoComplete, Checkbox, DatePicker, SelectPicker } from "rsuite";
 import { dateRequiredRule, requiredRule } from "utils/validationRules";
-import useSelectListDepartment from "hooks/Select/useSelectListDepartment";
-import useSelectListPosition from "hooks/Select/useSelectListPosition";
 import { StaffAddType } from "components/StafffNewDesign/TypeStaff";
 import staff_service from "services/Staff/staff_service";
 import { toast } from "react-toastify";
@@ -20,14 +15,10 @@ import { ShowError } from "components/Dialogs/Dialogs";
 import useListOrg from "hooks/Select/useListOrg";
 import useSelectListGender from "hooks/Select/useSelectListGender";
 import useSelectListStaffType from "hooks/Select/useSelectListStaffType";
-import { v4 as uuid } from "uuid";
 import { useListGovIDType } from "hooks/Select/useListGovIDType";
 import { FormItemInterface } from "components/interface";
 import { useSelector } from "react-redux";
-import { type } from "os";
 import MapListDepartmentItem from "components/StafffNewDesign/mapListDepartment/MapListDepartmentItem";
-import useSelectStorePosition from "hooks/Select/useSelectStorePosition";
-import useSelectStoreDepartment from "hooks/Select/useSelectStoreDepartment";
 
 type Props = {
   flag?: string;
@@ -40,6 +31,7 @@ type Img = {
   FilePath?: string;
   AttFileId: string;
   FileName: string;
+  FlagFileUpload: string;
 };
 
 export default function StaffAdd({ flag, code, onSuccess }: Props) {
@@ -49,24 +41,14 @@ export default function StaffAdd({ flag, code, onSuccess }: Props) {
   const _t = useLocalization("toast");
   const _p = useLocalization("Placeholder");
   const formRef: any = useRef(null);
-  const [flagProps, setFlagProps] = useState(flag);
   const [formValue, setFormValue] = useState({} as StaffAddType);
-  const selectListStaff = useSelectListStaff();
   const listTypeID = useListGovIDType();
   const [imgAPI, setIMGApi] = useState<Img>();
-  const listDepartment = useSelectListDepartment();
   const listOrg = useListOrg();
-  const listPosition = useSelectListPosition();
   const listGender = useSelectListGender();
   const staffType = useSelectListStaffType();
-  const [DP, setDP] = useState();
-  const [dataDP, SetDataDP] = useState();
-  const selectListDepartment: any[] = useSelectStoreDepartment();
-  const selectListPosition: any[] = useSelectStorePosition();
-  useEffect(() => {
-    const newArr = [...selectListDepartment, ...selectListPosition];
-    newArr.map((item) => SetDataDP(item));
-  }, []);
+  const nav = useNavigate();
+  const [DP, setDP] = useState([] as any);
 
   const listFormItem: FormItemInterface[] = [
     {
@@ -74,6 +56,7 @@ export default function StaffAdd({ flag, code, onSuccess }: Props) {
       required: true,
       control: [
         {
+          rule: requiredRule,
           name: "StaffCodeUser",
           placeholder: _p("Nhập"),
         },
@@ -81,41 +64,46 @@ export default function StaffAdd({ flag, code, onSuccess }: Props) {
       Col: 11,
     },
     {
-      label: _l("Họ"), // Họ tên
+      label: _l("Điện thoại"), // Họ tên
+      Col: 11,
+      control: [
+        {
+          name: "StaffPhone",
+          placeholder: _p("Nhập"),
+        },
+      ],
+    },
+
+    {
+      label: _l("Họ và tên"), // Họ tên
       required: true,
       Col: 11,
       control: [
         {
           name: "StaffLastName",
-          placeholder: _p("Nhập"),
+          rule: requiredRule,
+          placeholder: _p("Họ"),
+          className: "w-5",
         },
-      ],
-    },
-    {
-      label: _l("Tên"), // Họ tên
-      required: true,
-      Col: 11,
-      control: [
         {
           name: "StaffName",
-          placeholder: _p("Nhập"),
+          rule: requiredRule,
+          placeholder: _p("Tên"),
+          className: "w-5",
         },
       ],
     },
     {
-      label: _l("OrgID"), // Họ tên
-      required: true,
+      label: _l("Email"), // Họ tên
       Col: 11,
       control: [
         {
-          name: "OrgID",
-          accepter: SelectPicker,
-          data: listOrg,
-          labelKey: "mnnt_NNTFullName",
-          valueKey: "mnnt_NNTFullName",
+          name: "StaffEmail",
+          placeholder: _p("Nhập"),
         },
       ],
     },
+
     {
       label: _l("Loại"), // Họ tên
       required: true,
@@ -132,12 +120,56 @@ export default function StaffAdd({ flag, code, onSuccess }: Props) {
       ],
     },
     {
-      label: _l("Giới tính"), // Họ tên
+      label: _l("Địa chỉ hiện tại"), // Họ tên
       required: true,
       Col: 11,
       control: [
         {
-          name: "StaffCode",
+          name: "StaffAddress",
+          placeholder: _p("Nhập"),
+        },
+      ],
+    },
+
+    {
+      label: _l("Phòng ban"),
+      required: true,
+      Col: 11,
+      customComponent: (
+        <div>
+          <MapListDepartmentItem setDepartmentList={setDP} flag="create" />
+        </div>
+      ),
+    },
+    {
+      label: _l("DOB"), // Th
+      Col: 11,
+      control: [
+        {
+          name: "DBO",
+          placeholder: _p("Nhập"),
+          accepter: DatePicker,
+        },
+      ],
+    },
+
+    {
+      label: _l("Ghi chú"), // kinh nghiệm làm việc
+      Col: 11,
+      control: [
+        {
+          name: "Remark",
+          accepter: Textarea,
+          placeholder: _p("Nhập"),
+        },
+      ],
+    },
+    {
+      label: _l("Giới tính"), // Họ tên
+      Col: 11,
+      control: [
+        {
+          name: "Gender",
           accepter: SelectPicker,
           data: listGender,
           labelKey: "GenderCode",
@@ -146,12 +178,28 @@ export default function StaffAdd({ flag, code, onSuccess }: Props) {
         },
       ],
     },
+
     {
-      label: _l("Điện thoại"), // Họ tên
+      label: _l("OrgID"), // Họ tên
+      required: true,
       Col: 11,
       control: [
         {
-          name: "StaffPhone",
+          name: "OrgID",
+          accepter: SelectPicker,
+          data: listOrg,
+          placeholder: checkEdit ? "" : _p("Chọn"),
+          labelKey: "mnnt_NNTFullName",
+          valueKey: "mnnt_NNTFullName",
+        },
+      ],
+    },
+    {
+      label: _l("Nơi sinh"), // Họ tên
+      Col: 11,
+      control: [
+        {
+          name: "BirthPlace",
           placeholder: _p("Nhập"),
         },
       ],
@@ -167,56 +215,15 @@ export default function StaffAdd({ flag, code, onSuccess }: Props) {
       ],
     },
     {
-      label: _l("Nơi sinh"), // Họ tên
-      Col: 11,
-      control: [
-        {
-          name: "BirthPlace",
-          placeholder: _p("Nhập"),
-        },
-      ],
-    },
-    {
-      label: _l("Địa Chỉ"), // Họ tên
-      required: true,
-      Col: 11,
-      control: [
-        {
-          name: "StaffAddress",
-          placeholder: _p("Nhập"),
-        },
-      ],
-    },
-    {
       label: _l("Địa chỉ thường trú"), // Họ tên
-      required: true,
       Col: 11,
+      required: true,
       control: [
         {
+          rule: requiredRule,
           name: "PermanentAddress",
           accepter: Textarea,
           placeholder: _p("Nhập"),
-        },
-      ],
-    },
-    {
-      label: _l("Phòng ban"),
-      required: true,
-      Col: 11,
-      customComponent: (
-        <div>
-          <MapListDepartmentItem item={dataDP} flag="create" setDP={setDP} />
-        </div>
-      ),
-    },
-    {
-      label: _l("DOB"), // Th
-      Col: 11,
-      control: [
-        {
-          name: "DateForm",
-          placeholder: _p("Nhập"),
-          accepter: DatePicker,
         },
       ],
     },
@@ -226,9 +233,33 @@ export default function StaffAdd({ flag, code, onSuccess }: Props) {
       Col: 11,
       control: [
         {
+          rule: dateRequiredRule,
           name: "WorkingStartDate",
           placeholder: _p("Nhập"),
           accepter: DatePicker,
+        },
+      ],
+    },
+    {
+      label: _l("Số giấy tờ"), // kinh nghiệm làm việc
+      required: true,
+      Col: 11,
+      control: [
+        {
+          name: "IDCardNumber",
+          placeholder: _p("Nhập"),
+          className: "w-5",
+          rule: requiredRule,
+        },
+        {
+          name: "GovIDType",
+          data: listTypeID,
+          accepter: SelectPicker,
+          placeholder: _p("Loại giấy tờ"),
+          labelKey: "GovIDTypeName",
+          valueKey: "GovIDType",
+          className: "w-5",
+          rule: requiredRule,
         },
       ],
     },
@@ -244,41 +275,15 @@ export default function StaffAdd({ flag, code, onSuccess }: Props) {
       ],
     },
     {
-      label: _l("Ghi chú"), // kinh nghiệm làm việc
+      label: _l("Ngày cấp"), // Th
+      required: true,
       Col: 11,
       control: [
         {
-          name: "Remark",
-          accepter: Textarea,
+          rule: dateRequiredRule,
+          name: "DateOfIssue",
           placeholder: _p("Nhập"),
-        },
-      ],
-    },
-    {
-      label: _l("Nơi cấp"), // kinh nghiệm làm việc
-      Col: 11,
-      control: [
-        {
-          name: "PlaceOfIssue",
-          placeholder: _p("Nhập"),
-        },
-      ],
-    },
-    {
-      label: _l("Số giấy tờ"), // kinh nghiệm làm việc
-      Col: 11,
-      control: [
-        {
-          name: "IDCardNumber",
-          placeholder: _p("Nhập"),
-        },
-        {
-          name: "GovIDType",
-          data: listTypeID,
-          accepter: SelectPicker,
-          placeholder: _p("Loại giấy tờ"),
-          labelKey: "GovIDTypeName",
-          valueKey: "GovIDType",
+          accepter: DatePicker,
         },
       ],
     },
@@ -288,27 +293,31 @@ export default function StaffAdd({ flag, code, onSuccess }: Props) {
       control: [
         {
           name: "FlagActive",
-          plaintext: false, // kết xuất văn bản thuần túy
           placeholder: _p("Nhập"),
-          // defaultChecked: true,
+          defaultChecked: true,
+          onChange: () => {
+            setFormValue((p: any) => {
+              return {
+                ...p,
+                FlagActive: formValue.FlagActive === "1" ? "0" : "1",
+              };
+            });
+          },
           accepter: Toggle,
           checkedChildren: "Active",
           unCheckedChildren: "Inactive",
-          customerFormItem: (
-            <div
-              style={{
-                border: "2px solid",
-                display: "flex",
-                alignItems: "center",
-                padding: "6px 10px",
-                borderRadius: "4px",
-                color: "green",
-                fontWeight: "700",
-                cursor: "pointer",
-              }}>
-              Detail
-            </div>
-          ),
+        },
+      ],
+    },
+    {
+      label: _l("Nơi cấp"), // kinh nghiệm làm việc
+      Col: 11,
+      required: true,
+      control: [
+        {
+          rule: requiredRule,
+          name: "PlaceOfIssue",
+          placeholder: _p("Nhập"),
         },
       ],
     },
@@ -326,12 +335,18 @@ export default function StaffAdd({ flag, code, onSuccess }: Props) {
           StaffCodeUser: formValue.StaffCodeUser ? formValue.StaffCodeUser : "",
           StaffName: formValue.StaffName ? formValue.StaffName : "",
           StaffLastName: formValue.StaffLastName ? formValue.StaffLastName : "",
+          StaffEmail: formValue.StaffEmail ? formValue.StaffEmail : "",
           StaffAddress: formValue.StaffAddress ? formValue.StaffAddress : "",
           StaffPhone: formValue.StaffPhone ? formValue.StaffPhone : "",
+          Gender: formValue.Gender ? formValue.Gender : "",
+          PlaceOfIssue: formValue.Gender ? formValue.PlaceOfIssue : "",
           OrgID: NetWorkID,
+          IDCardNumber: formValue.IDCardNumber ? formValue.IDCardNumber : "",
+          DBO: formValue.DBO ? formValue.DBO : "",
           Remark: formValue.Remark ? formValue.Remark : "",
           WorkingEndDate: new Date(formValue.WorkingEndDate),
           WorkingStartDate: new Date(formValue.WorkingStartDate),
+          DateOfIssue: new Date(formValue.DateOfIssue),
           BirthPlace: formValue.BirthPlace ? formValue.BirthPlace : "",
           UserID: formValue.UserID ? formValue.UserID : "",
           StaffType: formValue.StaffType ? formValue.StaffType : "",
@@ -339,23 +354,24 @@ export default function StaffAdd({ flag, code, onSuccess }: Props) {
           PermanentAddress: formValue.PermanentAddress
             ? formValue.PermanentAddress
             : "",
-          AvatarFilePath: null,
-          AvatarUrl: imgAPI?.Url,
-          AvatarFileBase64: null,
-          AvatarFileName: imgAPI?.FileName,
-          FlagFileUpload: "1",
-          AttFileId: imgAPI?.AttFileId,
+          AvatarFilePath: imgAPI?.FilePath ? imgAPI.FilePath : "",
+          AvatarUrl: imgAPI?.Url ? imgAPI.Url : "",
+          AvatarFileName: imgAPI?.FileName ? imgAPI.FileName : "",
+          AttFileId: imgAPI?.AttFileId ? imgAPI.AttFileId : "",
+          FlagFileUpload: imgAPI?.FlagFileUpload ? imgAPI?.FlagFileUpload : "",
         },
-        Lst_Staff_MapDepartment: DP,
+        Lst_Staff_MapDepartment:
+          DP[0].DepartmentCode === null || DP[0].PositionCode === null
+            ? []
+            : DP,
       };
+      console.log(359, condition);
       staff_service
         .update({ isNew: true, data: condition })
         .then((resp: any) => {
           if (resp.Success) {
             toast.success(_t("Add SuccessFully"));
-            // onSuccess();
-            // setFormValue({});
-            // handleClose();
+            nav(`/StaffNew/${resp.Data?.StaffCode}/chitiet`);
           } else {
             ShowError(resp.ErrorData);
           }
@@ -413,8 +429,16 @@ export default function StaffAdd({ flag, code, onSuccess }: Props) {
             </Link>
           </div>
         </div>
-        <div style={{ display: "flex", marginTop: "8px", background: "#fff" }}>
-          <div>
+        <div
+          style={{
+            display: "flex",
+            marginTop: "8px",
+            background: "#fff",
+            paddingTop: "30px",
+            paddingLeft: "30px",
+            paddingRight: "30px",
+          }}>
+          <div style={{ paddingRight: "40px" }}>
             <InputUploadIMG setIMGApi={setIMGApi} />
           </div>
           <div>{body()}</div>

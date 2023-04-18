@@ -12,9 +12,14 @@ import { useLocalization } from "hooks/useLocalization";
 import ModalStaffEdit from "./ModalStaffEdit";
 import { dateRequiredRule } from "utils/validationRules";
 import { Textarea } from "components/input/Textarea";
+import { convertDate } from "utils/date";
+import { useDispatch } from "react-redux";
+import { setDataUpdate } from "store/reducers/ui";
+import { useSelector } from "react-redux";
 
 function MoreComponentStaff() {
   const NetWorkID: string = `${import.meta.env.VITE_NETWORK_FIX}`;
+  const data = useSelector((state: any) => state.ui.data);
   const _t = useLocalization("toast");
   const formRef: any = useRef(null);
   const [formValue, setFormValue] = useState({} as any);
@@ -45,12 +50,17 @@ function MoreComponentStaff() {
 
   const listFormItem: any[] = [
     {
-      label: changeTitleDate ? _l("Ngày nghỉ việc") : _l("Ngày tạm dừng"),
+      label:
+        changeTitleDate === "pause"
+          ? _l("Ngày nghỉ việc")
+          : changeTitleDate === "inactive"
+          ? _l("Ngày tạm dừng")
+          : "",
       required: true,
       control: [
         {
           rule: dateRequiredRule,
-          name: "SignDate",
+          name: "HistDate",
           placeholder: _p("Nhập"),
           accepter: DatePicker,
           className: "w-5",
@@ -62,59 +72,99 @@ function MoreComponentStaff() {
       required: true,
       control: [
         {
-          name: "ContractNo",
+          name: "ReasonDesc",
           placeholder: _p("Nhập"),
           accepter: Textarea,
         },
       ],
     },
   ];
-
-  const handleSubmit = () => {
-    console.log("a");
+  const listFormItemActive: any[] = [
+    {
+      label: _l("Ngày đi làm lại"),
+      required: true,
+      control: [
+        {
+          rule: dateRequiredRule,
+          name: "BackDay",
+          placeholder: _p("Nhập"),
+          accepter: DatePicker,
+          className: "w-5",
+        },
+      ],
+    },
+    {
+      label: _l("Lý do"),
+      required: true,
+      control: [
+        {
+          name: "ReasonDesc",
+          placeholder: _p("Nhập"),
+          accepter: Textarea,
+        },
+      ],
+    },
+  ];
+  const dispatch = useDispatch();
+  const handleSubmit = async () => {
+    if (changeTitleDate === "pause") {
+      console.log("a");
+      const condition = {
+        StaffCode: staffCode,
+        HistDate: formValue.HistDate ? convertDate(formValue.HistDate) : "",
+        ReasonDesc: formValue.ReasonDesc,
+      };
+      const data = await staff_service.Paused(condition);
+      if (data.Success) {
+        toast.success("Cập nhật thành công");
+        dispatch(setDataUpdate(data));
+        setOpen(false);
+        setFormValue({});
+      } else {
+        ShowError(data.ErrorData);
+      }
+    } else if (changeTitleDate === "inactive") {
+      const conditionINACTIVE = {
+        StaffCode: staffCode,
+        HistDate: formValue.HistDate ? convertDate(formValue.HistDate) : "",
+        ReasonDesc: formValue.ReasonDesc,
+      };
+      const data = await staff_service.Inactive(conditionINACTIVE);
+      if (data.Success) {
+        toast.success("Cập nhật thành công");
+        dispatch(setDataUpdate(data));
+        setOpen(false);
+        setFormValue({});
+      } else {
+        ShowError(data.ErrorData);
+      }
+    } else if (changeTitleDate === "active") {
+      const conditionACTIVE = {
+        StaffCode: staffCode,
+        BackDay: new Date(formValue.BackDay),
+        ReasonDesc: formValue.ReasonDesc,
+      };
+      const data = await staff_service.Active(conditionACTIVE);
+      if (data.Success) {
+        toast.success("Cập nhật thành công");
+        dispatch(setDataUpdate(data));
+        setOpen(false);
+        setFormValue({});
+      } else {
+        ShowError(data.ErrorData);
+      }
+    }
   };
-  const handleChangeDatePause = () => {
-    setChangeTitleDate(true);
+  const handleChangeDatePause = async () => {
+    setChangeTitleDate("pause");
   };
   const handleChangeDateOff = () => {
-    setChangeTitleDate(false);
+    setChangeTitleDate("inactive");
+  };
+  const handleChangeActive = () => {
+    setChangeTitleDate("active");
   };
 
-  const items = [
-    <Dropdown.Item key={1} onClick={handleDeleteStaff}>
-      Xóa
-    </Dropdown.Item>,
-    <ModalStaffEdit
-      button={
-        <Dropdown.Item key={2} onClick={handleChangeDatePause}>
-          Nghỉ việc
-        </Dropdown.Item>
-      }
-      handleOpen={handleOpen}
-      handleClose={handleClose}
-      open={open}
-      listFormItem={listFormItem}
-      formRef={formRef}
-      setFormValue={setFormValue}
-      handleSubmit={handleSubmit}
-      flagProps={"update"}
-    />,
-    <ModalStaffEdit
-      button={
-        <Dropdown.Item key={3} onClick={handleChangeDateOff}>
-          Tạm dừng
-        </Dropdown.Item>
-      }
-      handleOpen={handleOpen}
-      handleClose={handleClose}
-      open={open}
-      listFormItem={listFormItem}
-      formRef={formRef}
-      setFormValue={setFormValue}
-      handleSubmit={handleSubmit}
-      flagProps={"update"}
-    />,
-  ];
   return (
     <div>
       <Dropdown
@@ -136,7 +186,63 @@ function MoreComponentStaff() {
         }
         style={{ border: "1px solid", borderRadius: "5px" }}
         placement="bottomEnd">
-        {items}
+        <div>
+          <div>
+            <Dropdown.Item key={1} onClick={handleDeleteStaff}>
+              Xóa
+            </Dropdown.Item>
+            {data?.Staff_Staff?.StaffStatus === "ACTIVE" ? (
+              <>
+                <ModalStaffEdit
+                  button={
+                    <Dropdown.Item key={2} onClick={handleChangeDatePause}>
+                      Nghỉ việc
+                    </Dropdown.Item>
+                  }
+                  handleOpen={handleOpen}
+                  handleClose={handleClose}
+                  open={open}
+                  listFormItem={listFormItem}
+                  formRef={formRef}
+                  setFormValue={setFormValue}
+                  handleSubmit={handleSubmit}
+                  flagProps={"update"}
+                />
+                <ModalStaffEdit
+                  button={
+                    <Dropdown.Item key={3} onClick={handleChangeDateOff}>
+                      Tạm dừng
+                    </Dropdown.Item>
+                  }
+                  handleOpen={handleOpen}
+                  handleClose={handleClose}
+                  open={open}
+                  listFormItem={listFormItem}
+                  formRef={formRef}
+                  setFormValue={setFormValue}
+                  handleSubmit={handleSubmit}
+                  flagProps={"update"}
+                />
+              </>
+            ) : (
+              <ModalStaffEdit
+                button={
+                  <Dropdown.Item key={3} onClick={handleChangeActive}>
+                    Đi làm lại
+                  </Dropdown.Item>
+                }
+                handleOpen={handleOpen}
+                handleClose={handleClose}
+                open={open}
+                listFormItem={listFormItemActive}
+                formRef={formRef}
+                setFormValue={setFormValue}
+                handleSubmit={handleSubmit}
+                flagProps={"update"}
+              />
+            )}
+          </div>
+        </div>
       </Dropdown>
     </div>
   );

@@ -17,7 +17,7 @@ export interface StaffAddType {
   WorkingEndDate?: any;
   PermanentAddress?: string;
   BirthPlace?: string;
-  DateOfIssue?: string;
+  DateOfIssue?: any;
   StaffFullName?: string;
   PlaceOfIssue?: string;
   FlagFileUpload?: string;
@@ -28,4 +28,7 @@ export interface StaffAddType {
   DepartmentCode?: string;
   PositionCode?: string;
   GovIDType?: string;
+  IDCardNumber?: string;
+  StaffEmail?: string;
+  Gender?: string;
 }

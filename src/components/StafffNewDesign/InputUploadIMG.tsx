@@ -28,7 +28,7 @@ export default function InputUploadIMG({ setIMGApi, imgStaff }: any) {
   const fetchUpload = async () => {
     if (checkEdit && file) {
       const repsUpload = await UploadFile_service.UploadFile(file);
-      await staff_service.upDateAvatar({
+      const UploadIMG = await staff_service.upDateAvatar({
         Staff_Staff: {
           StaffCode: staffCode,
           AvatarFilePath: repsUpload.Data.FilePath,
@@ -39,6 +39,9 @@ export default function InputUploadIMG({ setIMGApi, imgStaff }: any) {
           AttFileId: repsUpload.Data.AttFileId,
         },
       });
+      if (UploadIMG.Success === true) {
+        dispatch(setDataImg(repsUpload.Data));
+      }
     } else if (file) {
       const repsUpload = await UploadFile_service.UploadFile(file);
       setIMGApi(repsUpload?.Data);

@@ -1,93 +1,69 @@
-import useSelectListDepartment from "hooks/Select/useSelectListDepartment";
-import useSelectListPosition from "hooks/Select/useSelectListPosition";
 import useSelectStoreDepartment from "hooks/Select/useSelectStoreDepartment";
 import useSelectStorePosition from "hooks/Select/useSelectStorePosition";
 import React, { useState, useEffect, FC, memo, useRef } from "react";
-import { FiPlus, FiTrash } from "react-icons/fi";
+import { FiMinus, FiPlus, FiTrash } from "react-icons/fi";
+import { useSelector } from "react-redux";
 import { Button, Col, Form, IconButton, Row, SelectPicker } from "rsuite";
-
-interface MapListDepartmentInterface {
-  DepartmentCode?: any;
-  PositionCode?: any;
-  // id: number | string | any;
-}
 
 type Props = {
   item?: any;
   index?: number;
-  // handleAdd?: Function;
-  // handleRemove?: Function;
-  // handleChange?: Function;
   flag?: string;
   showButton?: boolean;
-  setDP: any;
-  itemUpdate?: any;
-  id?: any;
+  setDepartmentList?: any;
 };
 
 const MapListDepartmentItem: FC<Props> = ({
   item,
   index,
-  // handleAdd,
-  // handleRemove,
-  // handleChange,
   flag,
-  showButton = true,
-  itemUpdate,
-  setDP,
-  id,
+  setDepartmentList,
 }: Props) => {
+  const checkEdit = useSelector((state: any) => state.ui.checkEdit);
   const selectListDepartment: any[] = useSelectStoreDepartment();
   const selectListPosition: any[] = useSelectStorePosition();
   const formValue = {
     DepartmentCode: "",
-    FlagHeadDPM: null,
-    LogLUBy: "",
-    LogLUDTimeUTC: "",
-    NetworkID: "",
-    OrgID: "",
     PositionCode: "",
-    StaffCode: "",
-    StaffRole: "",
-    md_DepartmentName: "",
-    mp_PositionName: "",
-    ss_StaffCodeUser: null,
-    ss_StaffName: null,
   };
   const [selectList, setSelectList] = useState([formValue]);
-
-  useEffect(() => {
-    if (itemUpdate) {
-      setSelectList(itemUpdate);
-    }
-  }, [itemUpdate]);
-
   const handleAdd = () => {
     setSelectList([formValue, ...selectList]);
   };
-
   const handleRemove = (index: number) => {
     const list = [...selectList];
     list.splice(index, 1);
+    setDepartmentList(list);
     setSelectList(list);
   };
 
   const handleChangeValue = (
-    value: string | number | null,
+    value: any,
     event: React.SyntheticEvent,
     index: any,
     type: any
   ) => {
     const list: any = [...selectList];
     list[index][type] = value;
+    setDepartmentList(list);
     setSelectList(list);
-    setDP(list);
   };
-
+  useEffect(() => {
+    if (flag === "update" && item) {
+      setSelectList(item);
+    } else {
+      setSelectList([
+        {
+          DepartmentCode: "",
+          PositionCode: "",
+        },
+      ]);
+    }
+  }, [item]);
   return (
-    <div className="map-department-item">
-      {selectList.map((item: any, index: any) => (
-        <div key={index} className="list-select d-flex">
+    <div>
+      {selectList.map((item, index) => (
+        <div key={index} className="list-select d-flex py-1">
           <SelectPicker
             data={selectListDepartment}
             value={item.DepartmentCode}
@@ -96,9 +72,9 @@ const MapListDepartmentItem: FC<Props> = ({
             }
             valueKey="DepartmentCode"
             labelKey="DepartmentName"
-            style={{ width: "135px", marginTop: "10px" }}
+            style={{ width: checkEdit ? "130px" : "145px" }}
           />
-          <span style={{ paddingLeft: 10, paddingRight: 10, paddingTop: 17 }}>
+          <span style={{ paddingLeft: 11, paddingRight: 11, paddingTop: 6 }}>
             -
           </span>
           <SelectPicker
@@ -109,19 +85,15 @@ const MapListDepartmentItem: FC<Props> = ({
             }
             valueKey="PositionCode"
             labelKey="PositionName"
-            style={{ width: "135px", marginTop: "10px" }}
+            style={{ width: checkEdit ? "130px" : "145px" }}
           />
           <IconButton
-            style={{
-              border: "none",
-              background: "transparent",
-              marginTop: "10px",
-            }}
+            style={{ marginLeft: 20 }}
             icon={
               index === 0 ? (
                 <FiPlus style={{ color: "green", fontSize: "20px" }} />
               ) : (
-                <FiTrash style={{ color: "red", fontSize: "18px" }} />
+                <FiTrash style={{ color: "red", fontSize: "20px" }} />
               )
             }
             onClick={() => (index === 0 ? handleAdd() : handleRemove(index))}

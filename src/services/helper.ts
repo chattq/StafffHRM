@@ -95,7 +95,7 @@ const UploadWithHeader = async (url: string, headers: any, params: any) => {
     if (!params) params = {};
     var formdata = new FormData();
 
-    formdata.append("file", params, params?.name);
+    formdata.append("file", params, params.name);
 
     const requestOptions = {
       method: "POST",

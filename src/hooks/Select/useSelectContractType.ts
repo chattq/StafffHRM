@@ -8,14 +8,13 @@ import department_service from "services/Admin/department_service";
 import Staff_laborContract_service from "services/Staff/Staff_LaborContract_service";
 
 const useSelectListContractType = () => {
-  const [list, setList] = useState([]);
   const [loading, setLoading] = useState("");
   const dispatch = useDispatch();
   const select = store.getState().selectApiSlice.listContractType;
   const fetch = async () => {
     const resp = await Staff_laborContract_service.getAllActiveContractType();
     if (resp.Success) {
-      setList(resp.Data);
+      dispatch(setListContractType(resp.Data));
       setLoading(uuid());
     } else {
       ShowError(resp.ErrorData);
@@ -23,10 +22,18 @@ const useSelectListContractType = () => {
   };
 
   useEffect(() => {
-    fetch();
+    render();
   }, [loading, select]);
 
-  return list;
+  const render = () => {
+    if (select.length) {
+      return select;
+    } else {
+      fetch();
+    }
+  };
+  return select;
+  // return list;
 };
 
 export default useSelectListContractType;

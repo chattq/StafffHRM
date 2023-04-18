@@ -148,6 +148,17 @@ function StaffTable() {
               }}>
               {_l("Đang làm việc")}
             </span>
+          ) : dataRow.StaffStatus === "INACTIVE" ? (
+            <span
+              style={{
+                padding: "6px 10px 6px 10px",
+                background: "orange",
+                color: "white",
+                borderRadius: "6px",
+                fontWeight: "600",
+              }}>
+              {_l("Nghỉ tạm thời")}
+            </span>
           ) : (
             <span
               style={{

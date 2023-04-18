@@ -17,6 +17,7 @@ export default function StaffInforFull() {
   const data = useSelector((state: any) => state.ui.data);
   const { staffCode } = useParams();
   const [dataHistoryStaff, setHistoryStaff] = useState([]);
+  const dataUpdate = useSelector((state: any) => state.ui.dataUpdate);
   const [flag, setFlag] = useState("");
   const [open, setOpen] = useState(false);
   const handleOpen = () => {
@@ -27,7 +28,7 @@ export default function StaffInforFull() {
     setOpen(false);
   };
 
-  const fetchDataFamily = async () => {
+  const fetchDataHistory = async () => {
     const resp = await staff_service.getHistoryStaffHistDate(
       staffCode as string
     );
@@ -35,8 +36,11 @@ export default function StaffInforFull() {
     return resp;
   };
   useEffect(() => {
-    fetchDataFamily();
+    fetchDataHistory();
   }, []);
+  useEffect(() => {
+    fetchDataHistory();
+  }, [dataUpdate]);
   const dataHistory = () => {
     return (
       <>
@@ -99,22 +103,18 @@ export default function StaffInforFull() {
             </div>
             <div className="name_staff_new" style={{ marginLeft: "40px" }}>
               {/* mã nhân viên */}
-              {data?.Staff_Staff?.StaffCode === null ? (
+              {data?.Staff_Staff?.StaffCodeUser === null ? (
                 <p>{`---`}</p>
               ) : (
-                <p>{data?.Staff_Staff?.StaffCode}</p>
+                <p>{data?.Staff_Staff?.StaffCodeUser}</p>
               )}
               {/* tên nhân viên */}
-              {data?.Staff_Staff?.StaffFullName === null ? (
-                <p>{data?.Staff_Staff?.StaffName}</p>
-              ) : (
-                <p>{data?.Staff_Staff?.StaffFullName}</p>
-              )}
+              <p>{`${data?.Staff_Staff?.StaffLastName} ${data?.Staff_Staff?.StaffName}`}</p>
               {/* hình thức làm việc */}
-              {data?.Staff_Staff?.ms_StaffTypeName === null ? (
+              {data?.Staff_Staff?.StaffType === null ? (
                 <p>{`---`}</p>
               ) : (
-                <p>{data?.Staff_Staff?.ms_StaffTypeName}</p>
+                <p>{data?.Staff_Staff?.StaffType}</p>
               )}
               {/* phòng ban */}
               {data?.Staff_MapDepartment?.length > 1 ? (
@@ -171,6 +171,8 @@ export default function StaffInforFull() {
                 }}>
                 {data?.Staff_Staff?.StaffStatus === "ACTIVE" ? (
                   <p>{"Đang làm việc"}</p>
+                ) : data?.Staff_Staff?.StaffStatus === "INACTIVE" ? (
+                  <p>{"Nghỉ tạm thời"}</p>
                 ) : (
                   <p>{"Đã nghỉ việc"}</p>
                 )}
@@ -248,11 +250,14 @@ export default function StaffInforFull() {
                 <p>{data?.Staff_Staff?.PermanentAddress}</p>
               )}
               {/* số giấy tờ */}
-              {data?.Staff_Staff?.IDCardNumber === null ? (
+
+              {data?.Staff_Staff?.IDCardNumber &&
+              data?.Staff_Staff?.mgit_GovIDTypeName === null ? (
                 <p>---</p>
               ) : (
-                <p>{data?.Staff_Staff?.IDCardNumber}</p>
+                <p>{`${data?.Staff_Staff?.IDCardNumber} -- ${data?.Staff_Staff?.mgit_GovIDTypeName}`}</p>
               )}
+
               {/* ngày cấp */}
               {data?.Staff_Staff?.DateOfIssue === null ? (
                 <p>---</p>

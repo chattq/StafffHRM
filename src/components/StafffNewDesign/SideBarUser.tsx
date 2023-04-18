@@ -46,7 +46,7 @@ export default function SideBarUser({
         )}
       </div>
       <h3 style={{ textAlign: "center", fontSize: "16px", padding: "5px 0" }}>
-        {dataStaff.StaffFullName}
+        {`${dataStaff.StaffLastName} ${dataStaff.StaffName}`}
       </h3>
 
       <div
@@ -65,6 +65,17 @@ export default function SideBarUser({
               fontWeight: "600",
             }}>
             {_l("Đang làm việc")}
+          </span>
+        ) : dataStaff.StaffStatus === "INACTIVE" ? (
+          <span
+            style={{
+              padding: "6px 10px 6px 10px",
+              border: "1px solid orange",
+              color: "orange",
+              borderRadius: "6px",
+              fontWeight: "600",
+            }}>
+            {_l("Nghỉ tạm thời")}
           </span>
         ) : (
           <span
@@ -147,7 +158,20 @@ export default function SideBarUser({
           </div>
         )}
       </div>
-      {dataStaffDPM.length === 0 ? null : (
+      {dataStaffDPM.length === 0 ? (
+        <div>
+          <div style={{ marginTop: "10px", fontSize: "14px" }}>
+            {_l("Phòng ban:")}
+          </div>
+          <span
+            style={{
+              marginTop: "10px",
+              marginBottom: "10px",
+            }}>
+            Không có dữ liệu
+          </span>
+        </div>
+      ) : dataStaffDPM.length === 1 ? (
         <div
           style={{
             borderBottom: "1px solid",
@@ -228,6 +252,55 @@ export default function SideBarUser({
               )}
             </div>
           ))}
+        </div>
+      ) : (
+        <div>
+          <div style={{ marginTop: "10px" }}>
+            <div
+              style={{
+                fontSize: "13px",
+                color: "#4b4e4fad",
+                fontWeight: "600",
+                marginBottom: "3px",
+              }}>
+              {_l("Phòng ban")}
+            </div>
+            <p
+              style={{
+                width: "100%",
+                fontSize: "12px",
+                fontWeight: "600",
+                marginTop: "5px",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}>
+              {`Nhiều phòng ban (${dataStaffDPM.length})`}
+            </p>
+          </div>
+          <div style={{ marginTop: "7px" }}>
+            <div
+              style={{
+                fontSize: "13px",
+                color: "#4b4e4fad",
+                fontWeight: "600",
+                marginBottom: "3px",
+              }}>
+              {_l("Tên chức danh:")}
+            </div>
+            <p
+              style={{
+                width: "100%",
+                fontSize: "12px",
+                fontWeight: "600",
+                marginTop: "5px",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}>
+              {`Nhiều chức danh (${dataStaffDPM.length})`}
+            </p>
+          </div>
         </div>
       )}
     </div>
