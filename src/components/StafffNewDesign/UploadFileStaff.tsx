@@ -2,18 +2,18 @@ import { buildHeaders } from "components/HeaderComponent/buidheaders";
 import { useEffect, useRef, useState } from "react";
 import { FiUpload } from "react-icons/fi";
 import { Uploader } from "rsuite";
+import { getNameFile } from "./IconUploadFIleStaff";
 
 export default function UploadFileStaff({
   setFileContract,
   fileLaborUpdate,
-  fileContract,
   formValue,
   setFormValue,
-  flag,
 }: any) {
   const uploader = useRef<any>();
   const [hide, setHide] = useState(false);
   const [valueUpdate, setValueUpdate] = useState([]);
+  console.log(16, valueUpdate);
   useEffect(() => {
     if (fileLaborUpdate.ContractFileName === undefined) {
       setValueUpdate([]);
@@ -21,7 +21,8 @@ export default function UploadFileStaff({
       setValueUpdate([
         {
           name: fileLaborUpdate.ContractFileName,
-          url: fileLaborUpdate.ContractFileUrl,
+          FileUrl: fileLaborUpdate.ContractFileUrl,
+          url: getNameFile(fileLaborUpdate.ContractFileName),
         },
       ] as any);
     }
@@ -57,11 +58,9 @@ export default function UploadFileStaff({
         onSuccess={(response, file) => setFileContract(response.Data)}
         renderFileInfo={(file: any, fileElement) => {
           setHide(true);
-          if (file) {
-          }
           return (
             <>
-              <div style={{ color: "black" }}>File Name: {file.name}</div>
+              <div style={{ color: "black" }}>{file.name}</div>
             </>
           );
         }}

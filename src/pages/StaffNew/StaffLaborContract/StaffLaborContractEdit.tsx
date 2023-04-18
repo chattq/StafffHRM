@@ -214,7 +214,6 @@ export default function StaffLaborContractEdit({
         };
 
         if (flagProps === "update") {
-          console.log("update", condition);
           Staff_LaborContract_service.update({
             isNew: true,
             data: condition,
@@ -230,7 +229,6 @@ export default function StaffLaborContractEdit({
           });
         }
         if (flag === "detail") {
-          console.log("update", condition);
           Staff_LaborContract_service.update({
             isNew: false,
             data: condition,
