@@ -59,7 +59,14 @@ export default function UploadFileStaff({
           setHide(true);
           return (
             <>
-              <div style={{ color: "black" }}>{file.name}</div>
+              <div style={{ color: "black" }}>a{file.name}</div>
+            </>
+          );
+        }}
+        renderThumbnail={(file: any, thumbnai: any) => {
+          return (
+            <>
+              <img src={getNameFile(file.name)} alt="" />
             </>
           );
         }}

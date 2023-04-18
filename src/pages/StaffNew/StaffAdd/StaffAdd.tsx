@@ -110,6 +110,7 @@ export default function StaffAdd({ flag, code, onSuccess }: Props) {
       Col: 11,
       control: [
         {
+          rule: requiredRule,
           name: "StaffType",
           accepter: SelectPicker,
           data: staffType,

@@ -124,7 +124,7 @@ export const handleSuccess = (response: any, setListFile: any) => {
 };
 
 export const renderFileUploading = (
-  file: FileTypeCustom,
+  file: any,
   fileElement: ReactNode,
   flagPop: string
 ) => {
@@ -176,8 +176,9 @@ export const renderFileUploading = (
   return (
     <div
       style={{ cursor: "pointer" }}
-      className={`list-file__item ${flagPop === "detail" ? "list-detail" : ""}`}
-    >
+      className={`list-file__item ${
+        flagPop === "detail" ? "list-detail" : ""
+      }`}>
       <div className="list-file__item-image">
         <img src={doc} alt="" />
       </div>

@@ -116,6 +116,7 @@ export default function StaffInforEdit() {
       control: [
         {
           name: "StaffType",
+          rule: requiredRule,
           accepter: SelectPicker,
           data: staffType,
           placeholder: _p("Nhập"),
@@ -316,22 +317,6 @@ export default function StaffInforEdit() {
           accepter: Toggle,
           checkedChildren: "Active",
           unCheckedChildren: "Inactive",
-          customerFormItem: (
-            <div
-              style={{
-                transform: "translateX(-150px)",
-                border: "2px solid",
-                display: "flex",
-                alignItems: "center",
-                padding: "6px 10px",
-                borderRadius: "4px",
-                color: "green",
-                fontWeight: "700",
-                cursor: "pointer",
-              }}>
-              Detail
-            </div>
-          ),
         },
       ],
     },
