@@ -145,40 +145,42 @@ export default function StaffAppointEdit({
           StaffCode: staffCode ? staffCode : "",
           Idx: formValue.Idx ? formValue.Idx : "",
           AppointDate: formValue.AppointDate
-            ? convertDate(formValue.AppointDate)
+            ? new Date(formValue.AppointDate)
             : "",
           DecisionNo: formValue.DecisionNo ? formValue.DecisionNo : "",
           Position: formValue.Position ? formValue.Position : "",
           WorkExperience: formValue.WorkExperience
             ? formValue.WorkExperience
             : "",
-          DateTo: convertDate(formValue.DateTo)
-            ? convertDate(formValue.DateTo)
-            : "",
+          DateTo: formValue.DateTo ? new Date(formValue.DateTo) : "",
         };
 
         if (flagProps === "update") {
-          Staff_WorkExperience_service.Create(condition).then((resp: any) => {
-            if (resp.Success) {
-              toast.success(_t("Add SuccessFully"));
-              onSuccess();
-              setFormValue({});
-              handleClose();
-            } else {
-              ShowError(resp.ErrorData);
+          Staff_Appoint_service.update({ isNew: true, data: condition }).then(
+            (resp: any) => {
+              if (resp.Success) {
+                toast.success(_t("Add SuccessFully"));
+                onSuccess();
+                setFormValue({});
+                handleClose();
+              } else {
+                ShowError(resp.ErrorData);
+              }
             }
-          });
+          );
         }
         if (flag === "detail") {
-          Staff_WorkExperience_service.Update(condition).then((resp: any) => {
-            if (resp.Success) {
-              toast.success(_t("Update SuccessFully"));
-              onSuccess();
-              handleClose();
-            } else {
-              ShowError(resp.ErrorData);
+          Staff_Appoint_service.update({ isNew: false, data: condition }).then(
+            (resp: any) => {
+              if (resp.Success) {
+                toast.success(_t("Update SuccessFully"));
+                onSuccess();
+                handleClose();
+              } else {
+                ShowError(resp.ErrorData);
+              }
             }
-          });
+          );
         }
       }
     }

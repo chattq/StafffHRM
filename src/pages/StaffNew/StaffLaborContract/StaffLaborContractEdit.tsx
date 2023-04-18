@@ -245,7 +245,6 @@ export default function StaffLaborContractEdit({
       }
     }
   };
-  console.log();
   const render = () => {
     if (flag === "detail") {
       setFormValue({

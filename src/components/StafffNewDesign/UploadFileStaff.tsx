@@ -13,7 +13,6 @@ export default function UploadFileStaff({
   const uploader = useRef<any>();
   const [hide, setHide] = useState(false);
   const [valueUpdate, setValueUpdate] = useState([]);
-  console.log(16, valueUpdate);
   useEffect(() => {
     if (fileLaborUpdate.ContractFileName === undefined) {
       setValueUpdate([]);

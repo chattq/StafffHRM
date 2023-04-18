@@ -96,7 +96,7 @@ const MapListDepartmentItem: FC<Props> = ({
                 <FiTrash style={{ color: "red", fontSize: "20px" }} />
               )
             }
-            onClick={() => (index === 0 ? handleAdd() : handleRemove(index))}
+            onClick={() => (index !== 0 ? handleRemove(index) : handleAdd())}
           />
         </div>
       ))}
