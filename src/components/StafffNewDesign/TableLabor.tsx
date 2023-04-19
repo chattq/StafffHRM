@@ -15,7 +15,6 @@ export default function TableLabor({
   setId?: any;
 }) {
   const checkEdit = useSelector((state: any) => state.ui.checkEdit);
-
   return (
     <div style={{ background: "white", height: "100vh", marginTop: "8px" }}>
       {buttonModal}

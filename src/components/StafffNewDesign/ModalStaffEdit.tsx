@@ -68,13 +68,15 @@ export default function ModalStaffEdit({
         <Modal.Body style={{ padding: flag === "history" ? "10px" : "" }}>
           {body()}
         </Modal.Body>
-        <ModalFooterComponent
-          onUpdate={handleSubmit}
-          onDelete={handleSubmit}
-          onChangeToUpdate={handleSubmit}
-          flag={flagProps}
-          onClose={handleClose}
-        />
+        {flag === "history" ? null : (
+          <ModalFooterComponent
+            onUpdate={handleSubmit}
+            onDelete={handleSubmit}
+            onChangeToUpdate={handleSubmit}
+            flag={flagProps}
+            onClose={handleClose}
+          />
+        )}
       </Modal>
     </>
   );

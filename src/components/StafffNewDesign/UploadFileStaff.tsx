@@ -64,11 +64,7 @@ export default function UploadFileStaff({
           );
         }}
         renderThumbnail={(file: any, thumbnai: any) => {
-          return (
-            <>
-              <img src={getNameFile(file.name)} alt="" />
-            </>
-          );
+          return <img src={getNameFile(file.name)} alt={file.name} />;
         }}
         onRemove={(file) => {
           setHide(false);
