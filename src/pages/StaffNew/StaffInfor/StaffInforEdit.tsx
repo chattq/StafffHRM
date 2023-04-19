@@ -310,7 +310,7 @@ export default function StaffInforEdit() {
             setFormValue((p: any) => {
               return {
                 ...p,
-                FlagActive: formValue.FlagActive === "1" ? "0" : "1",
+                FlagActive: data?.Staff_Staff?.FlagActive === "1" ? "0" : "1",
               };
             });
           },
@@ -381,7 +381,10 @@ export default function StaffInforEdit() {
         FlagFileUpload: dataIMG.FlagFileUpload
           ? dataIMG.FlagFileUpload
           : formValue.FlagFileUpload,
+        FlagActive: formValue.FlagActive,
+        StaffStatus: formValue.FlagActive === "1" ? "ACTIVE" : "PAUSE",
       };
+      console.log(386, condition);
       staff_service
         .update({
           isNew: false,

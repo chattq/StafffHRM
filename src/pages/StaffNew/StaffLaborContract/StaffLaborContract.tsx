@@ -8,6 +8,7 @@ import StaffLaborContractEdit from "./StaffLaborContractEdit";
 import { v4 as uuid } from "uuid";
 import { useSelector } from "react-redux";
 import { convertDate } from "utils/date";
+import { getNameFile } from "components/StafffNewDesign/IconUploadFIleStaff";
 
 interface Labor {
   ContractNo?: string;
@@ -87,8 +88,16 @@ export default function StaffLaborContract() {
             ) : (
               <td>
                 <a href={td.ContractFileUrl} style={{ display: "flex" }}>
-                  <div style={{ marginRight: "10px" }}>
-                    <FaDownload />
+                  <div style={{ marginRight: "10px", height: "20px" }}>
+                    <img
+                      src={getNameFile(td.ContractFileName)}
+                      alt={td.ContractFileName}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                      }}
+                    />
                   </div>
                   {td.ContractFileName}
                 </a>

@@ -17,6 +17,7 @@ export default function SideBarUser({
   dataStaff: any;
   dataStaffDPM: any;
 }) {
+  console.log(20, dataStaff.FlagActive);
   const _l = useLocalization("StaffTable");
   const checkEdit = useSelector((state: any) => state.ui.checkEdit);
   return (
@@ -55,7 +56,7 @@ export default function SideBarUser({
           justifyContent: "center",
           marginTop: "10px",
         }}>
-        {dataStaff.StaffStatus === "ACTIVE" ? (
+        {dataStaff.StaffStatus === "ACTIVE" && dataStaff.FlagActive === "1" ? (
           <span
             style={{
               padding: "6px 10px 6px 10px",

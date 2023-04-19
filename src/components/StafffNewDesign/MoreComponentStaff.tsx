@@ -108,7 +108,6 @@ function MoreComponentStaff() {
   const dispatch = useDispatch();
   const handleSubmit = async () => {
     if (changeTitleDate === "pause") {
-      console.log("a");
       const condition = {
         StaffCode: staffCode,
         HistDate: formValue.HistDate ? convertDate(formValue.HistDate) : "",
@@ -191,7 +190,8 @@ function MoreComponentStaff() {
             <Dropdown.Item key={1} onClick={handleDeleteStaff}>
               Xóa
             </Dropdown.Item>
-            {data?.Staff_Staff?.StaffStatus === "ACTIVE" ? (
+            {data?.Staff_Staff?.StaffStatus === "ACTIVE" &&
+            data?.Staff_Staff?.FlagActive === "1" ? (
               <>
                 <ModalStaffEdit
                   button={

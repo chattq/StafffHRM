@@ -169,7 +169,8 @@ export default function StaffInforFull() {
                   marginTop: "4px",
                   alignItems: "center",
                 }}>
-                {data?.Staff_Staff?.StaffStatus === "ACTIVE" ? (
+                {data?.Staff_Staff?.StaffStatus === "ACTIVE" &&
+                data?.Staff_Staff?.FlagActive === "1" ? (
                   <p>{"Đang làm việc"}</p>
                 ) : data?.Staff_Staff?.StaffStatus === "INACTIVE" ? (
                   <p>{"Nghỉ tạm thời"}</p>

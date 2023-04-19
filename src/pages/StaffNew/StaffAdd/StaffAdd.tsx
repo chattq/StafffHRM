@@ -300,7 +300,7 @@ export default function StaffAdd({ flag, code, onSuccess }: Props) {
             setFormValue((p: any) => {
               return {
                 ...p,
-                FlagActive: formValue.FlagActive === "1" ? "0" : "1",
+                FlagActive: formValue.FlagActive === "0" ? "1" : "0",
               };
             });
           },
@@ -360,13 +360,14 @@ export default function StaffAdd({ flag, code, onSuccess }: Props) {
           AvatarFileName: imgAPI?.FileName ? imgAPI.FileName : "",
           AttFileId: imgAPI?.AttFileId ? imgAPI.AttFileId : "",
           FlagFileUpload: imgAPI?.FlagFileUpload ? imgAPI?.FlagFileUpload : "",
+          FlagActive: formValue.FlagActive ? formValue.FlagActive : "1",
+          StaffStatus: formValue.FlagActive === "0" ? "PAUSE" : "ACTIVE",
         },
         Lst_Staff_MapDepartment:
           DP[0].DepartmentCode === null || DP[0].PositionCode === null
             ? []
             : DP,
       };
-      console.log(359, condition);
       staff_service
         .update({ isNew: true, data: condition })
         .then((resp: any) => {
