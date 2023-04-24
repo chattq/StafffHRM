@@ -3,29 +3,33 @@ import { useEffect, useRef, useState } from "react";
 import { FiUpload } from "react-icons/fi";
 import { Uploader } from "rsuite";
 import { getNameFile } from "./IconUploadFIleStaff";
+import { fileName } from "./SpliceName";
 
 export default function UploadFileStaff({
   setFileContract,
   fileLaborUpdate,
   formValue,
   setFormValue,
+  flag,
 }: any) {
   const uploader = useRef<any>();
   const [hide, setHide] = useState(false);
   const [valueUpdate, setValueUpdate] = useState([]);
   useEffect(() => {
-    if (fileLaborUpdate.ContractFileName === undefined) {
+    if (fileLaborUpdate.ContractFileName === null) {
+      setValueUpdate([]);
+      setHide(false);
+    } else if (flag === "update") {
       setValueUpdate([]);
     } else {
       setValueUpdate([
         {
           name: fileLaborUpdate.ContractFileName,
-          FileUrl: fileLaborUpdate.ContractFileUrl,
           url: getNameFile(fileLaborUpdate.ContractFileName),
         },
       ] as any);
     }
-  }, [fileLaborUpdate]);
+  }, [fileLaborUpdate.ContractFileName, flag]);
   return (
     <>
       <Uploader
@@ -59,7 +63,13 @@ export default function UploadFileStaff({
           setHide(true);
           return (
             <>
-              <div style={{ color: "black" }}>a{file.name}</div>
+              <div
+                style={{
+                  color: "black",
+                  paddingTop: 10,
+                }}>
+                {fileName(file.name)}
+              </div>
             </>
           );
         }}

@@ -1179,3 +1179,10 @@ textarea.rs-input,
   height: 100% !important;
   object-fit: cover !important;
 }
+
+/* .rs-uploader-file-item-btn-remove {
+  color: wheat !important;
+  border: 1px solid !important;
+  border-radius: 50% !important;
+  padding: 2px !important;
+} */

@@ -1,3 +1,7 @@
+import CourseDetail from "pages/CourseNew/CourseDetail/CourseDetail";
+import ManagerCourse from "pages/CourseNew/ManagerCourse/ManagerCourse";
+import ReportCourse from "pages/CourseNew/ReportCourse/ReportCourse";
+import TestCourse from "pages/CourseNew/TestCourse/TestCourse";
 import Staff_Discipline from "pages/Staff/Staff_Discipline/Staff_Discipline";
 import Staff_Reward from "pages/Staff/Staff_Reward/staff_reward";
 import Staff_Staff_Inactive from "pages/Staff/Staff_Staff_Inactive/Staff_Staff_inactive";
@@ -69,14 +73,67 @@ export const staff: RouteItem[] = [
   {
     path: "/StaffNew",
     mainMenuTitle: "Nhân sự",
-    mainMenuKey: "",
-    subMenuKey: "",
+    mainMenuKey: "StaffNew",
+    subMenuKey: "StaffNew",
     subMenuTitle: "",
     permissions: "",
-    checkSideBar: false,
     getPageElement: () => {
       return <StaffTable />; // chưa xong
     },
   },
-  // Thiếp lập
+  {
+    path: "/Course",
+    mainMenuTitle: "Đào tạo",
+    mainMenuKey: "Course",
+    subMenuKey: "Course",
+    subMenuTitle: "",
+    permissions: "",
+    getPageElement: () => {
+      return <></>; // chưa xong
+    },
+  },
+  {
+    path: "/Course/Manager_course", // Tạm dừng
+    mainMenuTitle: "",
+    mainMenuKey: "Course",
+    subMenuKey: "Quản lý khóa đào tạo",
+    subMenuTitle: "Quản lý khóa đào tạo",
+    permissions: "",
+    getPageElement: () => {
+      return <ManagerCourse />;
+    },
+  },
+  {
+    path: "/Course/Test_course", // Nghỉ việc
+    mainMenuTitle: "",
+    mainMenuKey: "Course",
+    subMenuKey: "Học và kiểm tra",
+    subMenuTitle: "Học và kiểm tra",
+    permissions: "",
+    getPageElement: () => {
+      return <TestCourse />;
+    },
+  },
+  {
+    path: "/Course/Report_course", // Nghỉ việc
+    mainMenuTitle: "",
+    mainMenuKey: "Course",
+    subMenuKey: "Báo cáo kết quả đào tạo",
+    subMenuTitle: "Báo cáo kết quả đào tạo",
+    permissions: "",
+    getPageElement: () => {
+      return <ReportCourse />;
+    },
+  },
+  {
+    path: "/Course/:codeCourse", // Nghỉ việc
+    mainMenuTitle: "",
+    mainMenuKey: "Course",
+    subMenuKey: "Quản lý khóa đào tạo",
+    subMenuTitle: "",
+    permissions: "",
+    getPageElement: () => {
+      return <CourseDetail />;
+    },
+  },
 ];

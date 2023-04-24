@@ -54,8 +54,7 @@ const FormItem: FC<Props> = ({ item }: Props) => {
               }
             })}
             {item?.customComponent ? (
-              <div
-                style={{ display: "block", width: "max-content", flex: "0" }}>
+              <div style={{ display: "block", width: "max-content" }}>
                 {item?.customComponent}
               </div>
             ) : (

@@ -35,12 +35,10 @@ const getAllActive = async () => {
 const updateDetails = async ({ isNew, data }: UpdateInterface) => {
   const str = JSON.stringify(data);
   if (isNew) {
-    return await api.post("Train_CourseChapter/AddAllDetail", {
+    return await api.post("Train_CourseChapter/Add", {
       strJson: str,
     });
   } else {
-    console.log("str ", str);
-
     return await api.post("Train_CourseChapter/UpdateAllDetail", {
       strJson: str,
     });
@@ -58,6 +56,23 @@ const getByChapterCode = async (ChapterCodeSys: string) => {
     ChapterCodeSys,
   });
 };
+const GetByChapterCodeSys = async (ChapterCodeSys: string) => {
+  return await api.post("Train_CourseChapterInst/GetByChapterCodeSys", {
+    ChapterCodeSys,
+  });
+};
+const updateSilde = async ({ isNew, data }: UpdateInterface) => {
+  const str = JSON.stringify(data);
+  if (isNew) {
+    return await api.post("Train_CourseChapter/Add", {
+      strJson: str,
+    });
+  } else {
+    return await api.post("Train_CourseChapter/UpdateAllDetail", {
+      strJson: str,
+    });
+  }
+};
 
 export default {
   update,
@@ -67,4 +82,6 @@ export default {
   getByTrCsCodeSys,
   getByChapterCode,
   removeMultiple,
+  GetByChapterCodeSys,
+  updateSilde,
 };

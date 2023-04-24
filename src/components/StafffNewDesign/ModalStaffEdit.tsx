@@ -3,6 +3,7 @@ import FormValidate from "components/FormValidate/FormValidate";
 import { useLocalization } from "hooks/useLocalization";
 import { Modal } from "rsuite";
 import TableLabor from "./TableLabor";
+import { useSelector } from "react-redux";
 
 export default function ModalStaffEdit({
   handleSubmit,
@@ -33,7 +34,9 @@ export default function ModalStaffEdit({
   data?: any;
   dataTable?: any;
 }) {
+  // console.log(37, flag);
   const _t = useLocalization("toast");
+  const checkModal = useSelector((state: any) => state.ui.checkModal);
   const body = () => {
     if (flag === "delete") {
       return <strong className="delete-text">{_t("Bạn có muốn xóa?")}</strong>;
@@ -61,7 +64,11 @@ export default function ModalStaffEdit({
   return (
     <>
       <span onClick={handleOpen}>{button}</span>
-      <Modal keyboard={false} open={open} onClose={handleClose}>
+      <Modal
+        keyboard={false}
+        open={open}
+        onClose={handleClose}
+        size={checkModal ? "md" : "sm"}>
         <Modal.Header>
           <Modal.Title>Modal Title</Modal.Title>
         </Modal.Header>

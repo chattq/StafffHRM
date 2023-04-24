@@ -17,7 +17,6 @@ export default function SideBarUser({
   dataStaff: any;
   dataStaffDPM: any;
 }) {
-  console.log(20, dataStaff.FlagActive);
   const _l = useLocalization("StaffTable");
   const checkEdit = useSelector((state: any) => state.ui.checkEdit);
   return (

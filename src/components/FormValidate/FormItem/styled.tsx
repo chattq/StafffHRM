@@ -85,6 +85,7 @@ export const FormItemContainer = styled.div`
   & .rs-uploader-text {
     display: flex;
     align-items: start;
+    flex-direction: column;
 
     &
       .rs-uploader-trigger-btn.rs-btn-icon.rs-btn-icon-placement-left.rs-btn.rs-btn-default {
@@ -95,13 +96,17 @@ export const FormItemContainer = styled.div`
   & .rs-uploader-file-items {
     /* max-width: 205px;
     width: 205px; */
-    margin-top: 0px !important;
+    margin-top: 20px !important;
+    display: flex;
+    gap: 10px;
+    overflow-x: scroll;
+    width: 100%;
     & .rs-uploader-file-item.rs-uploader-file-item-text {
       border-radius: 2px;
       background-color: #f6f6f6;
       box-shadow: 1px 1px 2px rgba(175, 175, 175, 0.749);
-      padding: 5px 6px !important;
-      margin-bottom: 10px;
+      padding: 0px 0px !important;
+      margin-bottom: 0px;
     }
 
     & .rs-uploader-file-item-icon-wrapper {

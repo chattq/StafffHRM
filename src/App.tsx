@@ -24,6 +24,7 @@ import StaffLaborContract from "pages/StaffNew/StaffLaborContract/StaffLaborCont
 import StaffExp from "pages/StaffNew/StaffExp/StaffExp";
 import StaffTrain from "pages/StaffNew/StaffTrain/StaffTrain";
 import StaffAdd from "pages/StaffNew/StaffAdd/StaffAdd";
+import CourseDetail from "pages/CourseNew/CourseDetail/CourseDetail";
 const App = () => {
   const windowSize = useWindowSize();
   const screenSize = useSelector((state: any) => state.ui.screenSize);
@@ -77,7 +78,6 @@ const App = () => {
               />
             </Route>
             <Route path="/addStaff" element={<StaffAdd />} />
-
             {RouteList.map((item) => {
               let page: any =
                 item != null ? (

@@ -9,8 +9,8 @@ import Txt from "../../../public/format-icon/txt.png";
 import Xml from "../../../public/format-icon/xml.png";
 import Zip from "../../../public/format-icon/zip.png";
 export const getNameFile = (nameFile: any) => {
-  let getLast = nameFile.split(".").slice(-1)[0];
-  switch (getLast.toLowerCase()) {
+  let getLast = nameFile?.split(".").slice(-1)[0];
+  switch (getLast?.toLowerCase()) {
     case "docx":
       let doc = Doc;
       return doc;

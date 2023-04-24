@@ -13,6 +13,7 @@ import Txt from "../../../public/format-icon/txt.png";
 import Xml from "../../../public/format-icon/xml.png";
 import Zip from "../../../public/format-icon/zip.png";
 import { formatBytes } from "utils/common";
+import { FormUpload } from "./styled";
 
 export interface FileTypeCustom {
   name?: string;
@@ -128,14 +129,13 @@ export const renderFileUploading = (
   fileElement: ReactNode,
   flagPop: string
 ) => {
-  console.log("file ", file);
-
+  // console.log(131, file);
   const name = file?.FileName
-    ? file.FileName
+    ? file?.FileName
     : file?.blobFile?.name
     ? file?.blobFile?.name
     : "";
-  let getLast = name.split(".").slice(-1)[0];
+  let getLast = name?.split(".").slice(-1)[0];
   let doc = "";
   switch (getLast.toLowerCase()) {
     case "docx":
@@ -174,26 +174,50 @@ export const renderFileUploading = (
   }
 
   return (
-    <div
-      style={{ cursor: "pointer" }}
-      className={`list-file__item ${
-        flagPop === "detail" ? "list-detail" : ""
-      }`}>
-      <div className="list-file__item-image">
-        <img src={doc} alt="" />
-      </div>
-      <div className="list-file__item-content">
-        <div className="d-flex align-items-flex-start flex-column justify-content-start">
-          <h4>{name}</h4>
-          <span>
-            {file?.blobFile?.size
-              ? formatBytes(file?.blobFile?.size)
-              : file?.FileSize
-              ? formatBytes(file.FileSize)
-              : ""}
-          </span>
+    <>
+      <FormUpload>
+        <div
+          style={{
+            height: "100px",
+            width: "100px",
+            borderRadius: "8px",
+            overflow: "hidden",
+          }}>
+          <img
+            src={file.url}
+            alt=""
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              borderRadius: "8px",
+            }}
+          />
         </div>
-      </div>
-    </div>
+      </FormUpload>
+      {/* <div style={{ display: "flex" }}>
+        <div
+          style={{ cursor: "pointer" }}
+          className={`list-file__item ${
+            flagPop === "detail" ? "list-detail" : ""
+          }`}>
+          <div className="list-file__item-image">
+            <img src={doc} alt="" />
+          </div>
+          <div className="list-file__item-content">
+            <div className="d-flex align-items-flex-start flex-column justify-content-start">
+              <h4>{name}</h4>
+              <span>
+                {file?.blobFile?.size
+                  ? formatBytes(file?.blobFile?.size)
+                  : file?.FileSize
+                  ? formatBytes(file.FileSize)
+                  : ""}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div> */}
+    </>
   );
 };

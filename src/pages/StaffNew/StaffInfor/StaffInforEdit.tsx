@@ -384,7 +384,6 @@ export default function StaffInforEdit() {
         FlagActive: formValue.FlagActive,
         StaffStatus: formValue.FlagActive === "1" ? "ACTIVE" : "PAUSE",
       };
-      console.log(386, condition);
       staff_service
         .update({
           isNew: false,

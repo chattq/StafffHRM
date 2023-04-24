@@ -40,6 +40,7 @@ export interface FormValidateInterface {
   model?: any; // các rule ở trong form
   layout: "horizontal" | "vertical" | "inline"; // layout của form
   autocomplete?: string; // có cho phép đề xuất tự động hiện hay không
+  plaintext?: any;
 }
 
 export interface UpdateInterface {

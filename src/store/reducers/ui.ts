@@ -29,6 +29,7 @@ export interface UiState {
   data: any;
   dataImg: any;
   dataUpdate: any;
+  checkModal: boolean;
 }
 
 const initialState: UiState = {
@@ -46,6 +47,7 @@ const initialState: UiState = {
   menuChildIndent: false,
   layoutFixed: true,
   checkEdit: false,
+  checkModal: false,
   data: [],
   dataImg: [],
   dataUpdate: [],
@@ -59,6 +61,9 @@ export const uiSlice = createSlice({
   reducers: {
     setCheckEdit: (state, action) => {
       state.checkEdit = action.payload;
+    },
+    setCheckModal: (state, action) => {
+      state.checkModal = action.payload;
     },
     setData: (state, action) => {
       state.data = action.payload;
@@ -168,6 +173,7 @@ export const {
   setCheckEdit,
   setData,
   setDataImg,
+  setCheckModal,
   setDataUpdate,
 } = uiSlice.actions;
 
