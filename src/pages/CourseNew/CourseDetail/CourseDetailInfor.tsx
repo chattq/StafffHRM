@@ -22,14 +22,13 @@ import Train_Course_service from "services/Course/Train_Course/Train_Course_serv
 import { convertDate } from "utils/date";
 import { dateRequiredRule, requiredRule } from "utils/validationRules";
 
-export default function CourseDetailInfor({ categoryForm }: any) {
+export default function CourseDetailInfor({ categoryForm, setFormEdit }: any) {
   const formRef: any = useRef(null);
   const [formValue, setFormValue] = useState({} as any);
   const _l = useLocalization("CourseDetailInfor");
   const _p = useLocalization("Placeholder");
   const { codeCourse } = useParams();
   const _t = useLocalization("toast");
-  const [dataCourse, setDataCourse] = useState([] as any);
   const listRank = useSelectListRank();
   const listDeparment = useSelectListDepartment();
   const listTrain = useSelectTrainType();
@@ -45,7 +44,6 @@ export default function CourseDetailInfor({ categoryForm }: any) {
       codeCourse as string
     ).then((resp: any) => {
       if (resp.Success) {
-        setDataCourse(resp.Data);
         setFormValue({
           TrCsName: resp.Data.Train_Course.TrCsName,
           TrCsDesc: resp.Data.Train_Course.TrCsDesc,
@@ -54,7 +52,7 @@ export default function CourseDetailInfor({ categoryForm }: any) {
           TotalFinish: resp.Data.Train_Course.TotalFinish,
           TotalLearn: resp.Data.Train_Course.TotalLearn,
           RankName: resp.Data.Train_Course.RankName,
-          FlagUsed: resp.Data.Train_Course.FlagUsed,
+          TrCsStatus: resp.Data.Train_Course.TrCsStatus,
           mdept_DepartmentName: resp.Data.Lst_Train_CourseDepartment.map(
             (item: any) => item.mdept_DepartmentName
           ),
@@ -191,7 +189,7 @@ export default function CourseDetailInfor({ categoryForm }: any) {
           placeholder: _p("Nhập"),
           accepter: SelectPicker,
           labelKey: "TrainTypeName",
-          valueKey: "TrainTypeName",
+          valueKey: "TrainType",
         },
       ],
     },
@@ -215,12 +213,13 @@ export default function CourseDetailInfor({ categoryForm }: any) {
         {
           name: "FlagUsed",
           placeholder: _p("Nhập"),
-          defaultChecked: formValue.FlagUsed === "0" ? false : true,
+          defaultChecked: formValue.TrCsStatus === "PENDING" ? false : true,
           onChange: () => {
             setFormValue((p: any) => {
               return {
                 ...p,
-                FlagUsed: formValue.FlagUsed === "0" ? "1" : "0",
+                TrCsStatus:
+                  formValue.TrCsStatus === "REJECT" ? "PENDING" : "REJECT",
               };
             });
           },
@@ -256,6 +255,9 @@ export default function CourseDetailInfor({ categoryForm }: any) {
       ),
     },
   ];
+  useEffect(() => {
+    setFormEdit(formValue);
+  }, [formValue]);
 
   return (
     <>

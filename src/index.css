@@ -1180,9 +1180,9 @@ textarea.rs-input,
   object-fit: cover !important;
 }
 
-/* .rs-uploader-file-item-btn-remove {
-  color: wheat !important;
-  border: 1px solid !important;
-  border-radius: 50% !important;
-  padding: 2px !important;
-} */
+.course:hover {
+  text-decoration: underline;
+}
+.sildeShow_scroll {
+  overflow-x: auto;
+}

@@ -19,6 +19,7 @@ export default function CourseDetail() {
   const { codeCourse } = useParams();
   const _t = useLocalization("toast");
   const nav = useNavigate();
+  const [formEdit, setFormEdit] = useState({} as any);
   const { OrgId } = store.getState().orgInfo;
 
   const handleChangeEdit = () => {
@@ -38,6 +39,41 @@ export default function CourseDetail() {
     } else {
       ShowError(resp.ErrorData);
     }
+  };
+
+  const handelSubmitUpdate = () => {
+    // const DepartmentCode = formEdit?.mdept_DepartmentName
+    //   .filter((item: any) => item !== null)
+    //   .map((item: any) => ({ DepartmentCode: item }));
+    // const rankCode = formEdit?.mrk_RankDesc
+    //   .filter((item: any) => item !== null)
+    //   .map((item: any) => ({ RankCode: item }));
+    const newData = {
+      ...formEdit,
+      TrCsCodeSys: codeCourse,
+      FlagAllRank: 30,
+    };
+    delete newData.mdept_DepartmentName;
+    delete newData.mrk_RankDesc;
+    Train_Course_service.update({
+      isNew: false,
+      data: {
+        Train_Course: newData,
+        Lst_Train_CourseRank: [],
+        Lst_Train_CourseDepartment: [],
+      },
+    }).then((resp: any) => {
+      if (resp.Success) {
+        console.log("a");
+        // toast.success(_t("Add SuccessFully"));
+        // setFormValue({});
+        // onSuccess();
+        // setOpen(false);
+        // nav(`/${NetworkId}/Course/${resp.Data.TrCsCodeSys}`);
+      } else {
+        ShowError(resp.ErrorData);
+      }
+    });
   };
   return (
     <div
@@ -76,7 +112,8 @@ export default function CourseDetail() {
                   background: "green",
                   color: "white",
                   fontWeight: "600",
-                }}>
+                }}
+                onClick={handelSubmitUpdate}>
                 {_l("Cập nhật")}
               </div>
               <div
@@ -143,7 +180,10 @@ export default function CourseDetail() {
           marginTop: "10px",
           padding: "25px 30px 25px 30px",
         }}>
-        <CourseDetailInfor categoryForm={categoryForm} />
+        <CourseDetailInfor
+          setFormEdit={setFormEdit}
+          categoryForm={categoryForm}
+        />
       </div>
       <div
         style={{

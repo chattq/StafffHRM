@@ -35,7 +35,7 @@ const getAllActive = async () => {
 const updateDetails = async ({ isNew, data }: UpdateInterface) => {
   const str = JSON.stringify(data);
   if (isNew) {
-    return await api.post("Train_CourseChapter/Add", {
+    return await api.post("Train_CourseChapter/AddAllDetail", {
       strJson: str,
     });
   } else {
@@ -61,8 +61,20 @@ const GetByChapterCodeSys = async (ChapterCodeSys: string) => {
     ChapterCodeSys,
   });
 };
+const removeSlide = async (codeDelete: any) => {
+  return await api.post("Train_CourseChapterInst/Delete", {
+    ChapterInstCodeSys: codeDelete,
+  });
+};
+const AddSlideShow = async (dataIMG: any) => {
+  const str = JSON.stringify(dataIMG);
+  return await api.post("Train_CourseChapterInst/Add", {
+    strJson: str,
+  });
+};
 const updateSilde = async ({ isNew, data }: UpdateInterface) => {
   const str = JSON.stringify(data);
+
   if (isNew) {
     return await api.post("Train_CourseChapter/Add", {
       strJson: str,
@@ -84,4 +96,6 @@ export default {
   removeMultiple,
   GetByChapterCodeSys,
   updateSilde,
+  AddSlideShow,
+  removeSlide,
 };

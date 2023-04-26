@@ -9,7 +9,7 @@ import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { DatePicker, IconButton, InputNumber, Stack, Uploader } from "rsuite";
 import Train_Course_Chapter_service from "services/Course/Train_Course/Train_Course_Chapter_service";
-
+import { v4 as uuidv4 } from "uuid";
 import { dateRequiredRule, requiredRule } from "utils/validationRules";
 import { Editor } from "@tinymce/tinymce-react";
 import {
@@ -20,6 +20,8 @@ import {
 import { buildHeaders, buildUrl } from "components/HeaderComponent/buidheaders";
 import { MdAttachFile } from "react-icons/md";
 import { useSelector } from "react-redux";
+import { setCheckEdit } from "store/reducers/ui";
+import { useDispatch } from "react-redux";
 
 export default function CourseContentEdit({
   button,
@@ -36,23 +38,25 @@ export default function CourseContentEdit({
   uuid?: string;
   dataTable?: any;
 }) {
+  // console.log(data?.ChapterCodeSys);
   const formRef: any = useRef(null);
   const [formValue, setFormValue] = useState({} as any);
   const [flagProps, setFlagProps] = useState(flag);
   const { codeCourse } = useParams();
   const [fileContract, setFileContract] = useState("" as any);
   const [fileLaborUpdate, setFileLaborUpdate] = useState("" as any);
+  const checkEdit = useSelector((state: any) => state.ui.checkEdit);
   const _l = useLocalization("ModalStaffEdit");
   const _t = useLocalization("toast");
   const _p = useLocalization("Placeholder");
   const [open, setOpen] = useState(false);
   const editorRef = useRef<any>(null);
   const [fileList, setFileList] = useState<any>([]);
-  const [dataSlide, setDataSlide] = useState([] as any);
-  const checkEdit = useSelector((state: any) => state.ui.checkEdit);
-  const [imgSlideShow, setIMGSlide] = useState(null as any);
 
-  // console.log(56, imgSlideShow);
+  const NetWorkID: string = `${import.meta.env.VITE_NETWORK_FIX}`;
+  const [removeSlideImgs, setRemoveSlideImgs] = useState<any[]>([]);
+  const dispatch = useDispatch();
+
   useEffect(() => {
     setFlagProps(flag as string);
   }, [uuid, flag]);
@@ -71,8 +75,29 @@ export default function CourseContentEdit({
     const resp = await Train_Course_Chapter_service.GetByChapterCodeSys(
       data?.ChapterCodeSys as any
     );
+
     if (resp.Success) {
-      setDataSlide(resp?.Data.Lst_Train_CourseChapterInst);
+      if (resp?.Data?.Lst_Train_CourseChapterInst === null) {
+        setFileList([]);
+      } else if (resp?.Data?.Lst_Train_CourseChapterInst.length !== 0) {
+        const newArr = resp?.Data?.Lst_Train_CourseChapterInst.map(
+          (item: any) => {
+            return {
+              ChapterInstCodeSys: item.ChapterInstCodeSys,
+              Idx: 1,
+              ImageType: "SLIDESHOW",
+              ImageFileType: "JPG",
+              ImageFileName: item.ImageFileName,
+              Remark: "",
+              ImageFileUrl: item.ImageFileUrl,
+              FlagFileUpload: "1",
+              AttFileId: "51f7dae8-61ad-410b-8b64-420490fc1385.jpg",
+              ImageFilePath: item.ImageFilePath,
+            };
+          }
+        );
+        setFileList(newArr);
+      }
     } else {
       ShowError(resp.ErrorData);
     }
@@ -149,7 +174,7 @@ export default function CourseContentEdit({
           action: buildUrl("File/UploadFile"),
           headers: buildHeaders(),
           removable: true,
-          multiple: false,
+          multiple: true,
           placeholder: _p("Tải tệp"),
           children: <IconButton icon={<MdAttachFile />} />,
           shouldQueueUpdate: (
@@ -158,74 +183,52 @@ export default function CourseContentEdit({
           ) => {
             return handleShouldUpdate(fileList, newFile, ["jpg", "png"], true);
           },
-          renderFileInfo: (
-            fileType: FileTypeCustom,
-            fileElement: ReactNode
-          ) => {
-            // return renderFileUploading(fileType, <></>, "update");
-            // console.log(fileType);
-
+          renderFileInfo: (fileType: any, fileElement: ReactNode) => {
             return (
-              <div style={{ display: "flex" }}>
-                <img width={120} height={120} src={fileType.url} alt="" />
+              <div style={{ borderRadius: "8px", overflow: "hidden" }}>
+                <img
+                  width={105}
+                  height={105}
+                  src={fileType.ImageFileUrl}
+                  alt=""
+                />
               </div>
             );
           },
-          onSuccess: (res: any, file: FileTypeCustom) => {
+          onSuccess: (res: any, file: any) => {
             if (res.Success) {
-              setFileList((p: any) => {
-                if (p) {
-                  return [
-                    ...p,
-                    {
-                      name: res.Data?.FileName,
-                      FileName: res.Data?.FileName,
-                      url: res.Data?.Url,
-                    },
-                  ];
-                } else {
-                  [
-                    {
-                      name: res.Data?.FileName,
-                      FileName: res.Data?.FileName,
-                      url: res.Data?.Url,
-                    },
-                  ];
-                }
-              });
-              setIMGSlide({
+              const fileIMG = {
+                ChapterInstCodeSys: "",
+                ChapterCodeSys: data?.ChapterCodeSys
+                  ? data?.ChapterCodeSys
+                  : "",
+                Idx: 1,
                 ImageType: "SLIDESHOW",
                 ImageFileType: "JPG",
                 ImageFileName: res.Data.FileName,
                 ImageFilePath: res.Data.FilePath,
-                FlagFileUpload: res.Data.FlagFileUpload,
+                Remark: "",
                 AttFileId: res.Data.AttFileId,
                 ImageFileUrl: res.Data.Url,
-              });
+                FlagFileUpload: "1",
+              };
+              setFileList([...fileList, fileIMG]);
             }
           },
-
-          onRemove: (file: FileTypeCustom) => {
-            // setTimeout(() => {
-            //   console.log("file hàm onRemove nè");
-            //   // setFormValue({
-            //   //   ...formValue,
-            //   //   ContractFilePath: null,
-            //   //   ContractFileName: null,
-            //   //   ContractFileSize: null,
-            //   //   ContractFileUrl: null,
-            //   //   FlagFileUpload: "0",
-            //   //   AttFileId: null,
-            //   // });
-            //   // isRemove = true;
-            //   // setFileList([
-            //   //   {
-            //   //     name: null,
-            //   //     FileSize: null,
-            //   //     FileName: null,
-            //   //   },
-            //   // ]);
-            // }, 0);
+          onRemove: (file: any) => {
+            if (flag === "detail") {
+              setRemoveSlideImgs((prevImg: any) => {
+                if (Array.isArray(prevImg)) {
+                  return [...prevImg, file.ChapterInstCodeSys];
+                } else {
+                  return [file.ChapterInstCodeSys];
+                }
+              });
+            }
+            const fileRemove = fileList.filter((item1: any) => {
+              return item1.ImageFileName !== file.ImageFileName;
+            });
+            setFileList(fileRemove);
           },
         },
       ],
@@ -238,17 +241,31 @@ export default function CourseContentEdit({
             init={{
               menubar: false,
               height: 180,
+              plugins: [
+                "advlist autolink lists link image charmap print preview anchor",
+                "searchreplace visualblocks code fullscreen",
+                "insertdatetime media table paste imagetools wordcount",
+              ],
+              toolbar:
+                "undo redo | formatselect | " +
+                "bold italic backcolor | alignleft aligncenter " +
+                "alignright alignjustify | bullist numlist outdent indent | " +
+                "removeformat | help",
+              content_style:
+                "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
             }}
             initialValue={flag === "detail" ? data.ChapterSpec : null}
             onInit={(evt, editor) => (editorRef.current = editor)}
             onEditorChange={(newText: any) => setNewText(newText)}
+            // disabled={true}
+            // inline={true}
           />
         </div>
       ),
     },
   ];
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (flag === "delete") {
       Train_Course_Chapter_service.remove(data.ChapterCodeSys).then(
         (resp: any) => {
@@ -273,6 +290,8 @@ export default function CourseContentEdit({
           trc_PassPercent: formValue.trc_PassPercent
             ? formValue.trc_PassPercent
             : "",
+          NetworkID: NetWorkID,
+          OrgID: NetWorkID,
           ChapterName: formValue.ChapterName ? formValue.ChapterName : "",
           ChapterDesc: formValue.ChapterDesc ? formValue.ChapterDesc : "",
           ChapterSpec: newText ? newText : "",
@@ -287,37 +306,50 @@ export default function CourseContentEdit({
         if (flagProps === "update") {
           Train_Course_Chapter_service.updateDetails({
             isNew: true,
-            data: condition,
+            data: {
+              Train_CourseChapter: condition,
+              Lst_Train_CourseChapterInst: fileList,
+            },
           }).then((resp: any) => {
             if (resp.Success) {
               toast.success(_t("Add SuccessFully"));
               onSuccess();
               setFormValue({});
               handleClose();
+              setFileList([]);
             } else {
               ShowError(resp.ErrorData);
+              setFileList([]);
             }
           });
         }
+
         if (flag === "detail") {
-          Train_Course_Chapter_service.updateDetails({
-            isNew: false,
-            data: {
-              Train_CourseChapter: condition,
-              Lst_Train_CourseChapterInst: [],
-            },
-          }).then((resp: any) => {
-            if (resp.Success) {
-              toast.success(_t("Update SuccessFully"));
-              onSuccess();
-              handleClose();
-            } else {
-              ShowError(resp.ErrorData);
-            }
+          removeSlideImgs?.forEach((value: any) => {
+            Train_Course_Chapter_service.removeSlide(value);
           });
-        }
-        if (imgSlideShow !== null) {
-          // Train_Course_Chapter_service.GetByChapterCodeSys()
+          const resp1 = await Train_Course_Chapter_service.getByChapterCode(
+            data?.ChapterCodeSys
+          );
+
+          if (resp1.Success) {
+            Train_Course_Chapter_service.updateDetails({
+              isNew: false,
+              data: {
+                Train_CourseChapter: condition,
+                Lst_Train_CourseChapterInst: fileList,
+              },
+            }).then((resp: any) => {
+              if (resp.Success) {
+                toast.success(_t("Update SuccessFully"));
+                dispatch(setCheckEdit(resp));
+                onSuccess();
+                handleClose();
+              } else {
+                ShowError(resp.ErrorData);
+              }
+            });
+          }
         }
       }
     }
@@ -335,19 +367,18 @@ export default function CourseContentEdit({
     }
   };
   useEffect(() => {
-    fetchSlideShow();
-    render();
-    setFileLaborUpdate({
-      ContractFileName: data?.ChapterFileName,
-      ContractFileUrl: data?.ChapterFileUrl,
-    });
-    const newArr = dataSlide?.map((item: any) => ({
-      name: item?.ImageFileName,
-      FileName: item?.ImageFileName,
-      url: item.ImageFileUrl,
-    }));
-    setFileList(newArr);
+    if (flag === "detail") {
+      fetchSlideShow();
+      render();
+      setFileLaborUpdate({
+        ContractFileName: data?.ChapterFileName,
+        ContractFileUrl: data?.ChapterFileUrl,
+      });
+    }
   }, [flag, uuid]);
+  useEffect(() => {
+    fetchSlideShow();
+  }, [checkEdit]);
   return (
     <>
       <ModalStaffEdit

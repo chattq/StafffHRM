@@ -29,11 +29,12 @@ import staff_reward from "services/Staff/staff_reward_service";
 import useListTypeReward from "hooks/Select/useListReward";
 import useSelectListDepartment from "hooks/Select/useSelectListDepartment";
 import { convertDate } from "utils/date";
-import Staff_Reward_Edit from "./staff_reward_edit";
+import Staff_Reward_Edit from "./ManagerCourseEdit";
 import Train_Course_service from "services/Course/Train_Course/Train_Course_service";
 import { Link } from "react-router-dom";
 import { setCheckEdit } from "store/reducers/ui";
 import { useDispatch } from "react-redux";
+import ManagerCourseEdit from "./ManagerCourseEdit";
 
 type Props = {
   AwardTypeCode: any[];
@@ -176,6 +177,33 @@ function ManagerCourse() {
       label: _l("Trạng thái"),
       width: 200,
       resizable: true,
+      cell: (dataRow: any) => (
+        <>
+          {dataRow.TrCsStatus === "PENDING" ? (
+            <span
+              style={{
+                padding: "6px 10px 6px 10px",
+                background: "green",
+                color: "white",
+                borderRadius: "6px",
+                fontWeight: "600",
+              }}>
+              {_l("Sử dụng")}
+            </span>
+          ) : (
+            <span
+              style={{
+                padding: "6px 10px 6px 10px",
+                background: "orange",
+                color: "white",
+                borderRadius: "6px",
+                fontWeight: "600",
+              }}>
+              {_l("Không sử dụng")}
+            </span>
+          )}
+        </>
+      ),
     },
   ];
 
@@ -351,7 +379,7 @@ function ManagerCourse() {
     const obj = checked[0];
 
     setCurrentCode(
-      <Staff_Reward_Edit
+      <ManagerCourseEdit
         code={obj}
         flag="update"
         onSuccess={reloading}

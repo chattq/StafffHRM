@@ -98,9 +98,10 @@ export const FormItemContainer = styled.div`
     width: 205px; */
     margin-top: 20px !important;
     display: flex;
-    gap: 10px;
-    overflow-x: scroll;
+    overflow-x: auto;
     width: 100%;
+    gap: 10px;
+
     & .rs-uploader-file-item.rs-uploader-file-item-text {
       border-radius: 2px;
       background-color: #f6f6f6;
