@@ -220,34 +220,36 @@ export default function CourseContent() {
         <Modal.Body style={{ padding: "20px 30px 20px 30px" }}>
           <div>
             <p>SildeShow</p>
-            <div
-              style={{ display: "flex", gap: 10, marginTop: "15px" }}
-              className="sildeShow_scroll">
-              {dataSilde === null ? (
-                <div style={{ color: "black", textAlign: "center" }}>
-                  Chưa cập nhật SildeShow
-                </div>
-              ) : (
-                dataSilde.map((item: any) => (
-                  <div
-                    style={{
-                      width: "100px",
-                      height: "100px",
-                      borderRadius: "8px",
-                      overflow: "hidden",
-                    }}>
-                    <img
-                      src={item.ImageFileUrl}
-                      alt={item.ImageFileName}
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                      }}
-                    />
+            <div style={{ overflowX: "auto" }}>
+              <div
+                style={{ display: "flex", gap: 10, marginTop: "15px" }}
+                className="sildeShow_scroll">
+                {dataSilde === null ? (
+                  <div style={{ color: "black", textAlign: "center" }}>
+                    Chưa cập nhật SildeShow
                   </div>
-                ))
-              )}
+                ) : (
+                  dataSilde.map((item: any) => (
+                    <div
+                      style={{
+                        width: "100px",
+                        height: "100px",
+                        borderRadius: "8px",
+                        overflow: "hidden",
+                      }}>
+                      <img
+                        src={item.ImageFileUrl}
+                        alt={item.ImageFileName}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                        }}
+                      />
+                    </div>
+                  ))
+                )}
+              </div>
             </div>
             <div style={{ paddingTop: "20px" }}>
               <h3

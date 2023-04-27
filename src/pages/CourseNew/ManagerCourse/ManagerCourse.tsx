@@ -80,7 +80,7 @@ function ManagerCourse() {
     });
 
     setCurrentCode(
-      <Staff_Reward_Edit
+      <ManagerCourseEdit
         code={obj}
         flag="delete"
         onSuccess={reloading}
@@ -91,7 +91,7 @@ function ManagerCourse() {
 
   const handleShowDetail = (data: any) => {
     setCurrentCode(
-      <Staff_Reward_Edit
+      <ManagerCourseEdit
         uuid={uuid()}
         flag="detail"
         onSuccess={reloading}
@@ -102,7 +102,7 @@ function ManagerCourse() {
 
   const handleAdd = () => {
     setCurrentCode(
-      <Staff_Reward_Edit uuid={uuid()} flag="add" onSuccess={reloading} />
+      <ManagerCourseEdit uuid={uuid()} flag="add" onSuccess={reloading} />
     );
   };
 

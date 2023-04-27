@@ -10,8 +10,7 @@ const ShowDetail: FC<Props> = ({ label, event, className }: Props) => {
   return (
     <div
       className={`table-show-detail ${className ? className : ""} `}
-      onClick={event}
-    >
+      onClick={event}>
       {label}
     </div>
   );

@@ -22,6 +22,7 @@ import { MdAttachFile } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { setCheckEdit } from "store/reducers/ui";
 import { useDispatch } from "react-redux";
+import TinyM from "components/StafffNewDesign/TinyM";
 
 export default function CourseContentEdit({
   button,
@@ -111,6 +112,7 @@ export default function CourseContentEdit({
       Col: 11,
       control: [
         {
+          rule: requiredRule,
           accepter: InputNumber,
           name: "ChapterIdx",
           placeholder: _p("Nhập"),
@@ -123,6 +125,7 @@ export default function CourseContentEdit({
       Col: 10,
       control: [
         {
+          rule: requiredRule,
           name: "trc_PassPercent",
           placeholder: _p("Nhập"),
         },
@@ -237,28 +240,9 @@ export default function CourseContentEdit({
       label: _l("Mô tả chi tiết"), // kinh nghiệm làm việc
       customComponent: (
         <div style={{ width: "100%" }}>
-          <Editor
-            init={{
-              menubar: false,
-              height: 180,
-              plugins: [
-                "advlist autolink lists link image charmap print preview anchor",
-                "searchreplace visualblocks code fullscreen",
-                "insertdatetime media table paste imagetools wordcount",
-              ],
-              toolbar:
-                "undo redo | formatselect | " +
-                "bold italic backcolor | alignleft aligncenter " +
-                "alignright alignjustify | bullist numlist outdent indent | " +
-                "removeformat | help",
-              content_style:
-                "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
-            }}
+          <TinyM
             initialValue={flag === "detail" ? data.ChapterSpec : null}
-            onInit={(evt, editor) => (editorRef.current = editor)}
-            onEditorChange={(newText: any) => setNewText(newText)}
-            // disabled={true}
-            // inline={true}
+            limit={40}
           />
         </div>
       ),

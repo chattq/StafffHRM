@@ -273,8 +273,7 @@ function Staff_Reward() {
           layout="horizontal"
           ref={formRef}
           formValue={formValidate}
-          setFormValue={setFormValidate}
-        ></FormValidate>
+          setFormValue={setFormValidate}></FormValidate>
         <Button
           style={{ width: "100%", textAlign: "center", marginTop: "10px" }}
           appearance="primary"
@@ -304,8 +303,7 @@ function Staff_Reward() {
             setCondition(changing);
             reloading();
             onClose();
-          }}
-        >
+          }}>
           {_l("OK")}
         </Button>
       </div>
@@ -359,8 +357,7 @@ function Staff_Reward() {
           onClick={() => handleDelete(checked)}
           className="mr-2"
           appearance="primary"
-          color="green"
-        >
+          color="green">
           {_b("Delete")}
         </Button>
       );
@@ -372,8 +369,7 @@ function Staff_Reward() {
           onClick={() => handleUpdate(checked)}
           className="mr-2"
           appearance="primary"
-          color="orange"
-        >
+          color="orange">
           {_b("Edit")}
         </Button>
       );

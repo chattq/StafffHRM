@@ -189,7 +189,7 @@ export default function CourseDetailInfor({ categoryForm, setFormEdit }: any) {
           placeholder: _p("Nhập"),
           accepter: SelectPicker,
           labelKey: "TrainTypeName",
-          valueKey: "TrainType",
+          valueKey: "TrainTypeName",
         },
       ],
     },
@@ -233,25 +233,35 @@ export default function CourseDetailInfor({ categoryForm, setFormEdit }: any) {
       label: _l("Đang học"),
       Col: 11,
       customComponent: (
-        <ModalStaffEdit
-          button={
-            <div
-              style={{
-                color: "blue",
-                fontSize: "16px",
-                textDecoration: "underline",
-                paddingLeft: "10px",
-                cursor: "pointer",
-              }}>
-              {formValue.TotalLearn}
-            </div>
-          }
-          open={open}
-          handleOpen={handleOpen}
-          handleClose={handleClose}
-          listFormItem={[]}
-          flag={"totalStaff"}
-        />
+        // <ModalStaffEdit
+        //   button={
+        //     <div
+        //       style={{
+        //         color: "blue",
+        //         fontSize: "16px",
+        //         textDecoration: "underline",
+        //         paddingLeft: "10px",
+        //         cursor: "pointer",
+        //       }}>
+        //       {formValue.TotalLearn}
+        //     </div>
+        //   }
+        //   open={open}
+        //   handleOpen={handleOpen}
+        //   handleClose={handleClose}
+        //   listFormItem={[]}
+        //   flag={"totalStaff"}
+        // />
+        <div
+          style={{
+            color: "blue",
+            fontSize: "16px",
+            textDecoration: "underline",
+            paddingLeft: "10px",
+            cursor: "pointer",
+          }}>
+          {formValue.TotalLearn}
+        </div>
       ),
     },
   ];
