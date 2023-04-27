@@ -38,7 +38,6 @@ const update = async ({ isNew, data }: any) => {
       strJson: str,
     });
   } else {
-    console.log(data);
     return await api.post("Train_Course/Update", {
       strJson: str,
     });

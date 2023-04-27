@@ -15,6 +15,7 @@ interface Train {
   TrainType?: string;
   LrCrStatus?: string;
   RankName?: any;
+  TrCsCodeSys?: any;
 }
 
 export default function StaffTrain() {
@@ -34,6 +35,7 @@ export default function StaffTrain() {
   useEffect(() => {
     fetchDataLabor();
   }, []);
+  console.log(dataTrain);
   const handleEdit = (data: any) => {
     setFlag("detail");
     setDataEdit(data);
@@ -72,7 +74,8 @@ export default function StaffTrain() {
               </td>
             )}
             <td>{convertDate(td.LearnStartDTimeUTC)}</td>
-            <td>{convertDate(td.LearnStartDTimeUTC)}</td>
+            <td>{convertDate(td.LearnEndDTimeUTC)}</td>
+            <td>{td.TrCsCodeSys}</td>
             <td>{td.TrCsName}</td>
             <td>{td.LrCrStatus}</td>
             <td>{td.TrainType}</td>
@@ -120,6 +123,7 @@ export default function StaffTrain() {
         dataHeader={[
           "Từ ngày",
           "Đến ngày",
+          "Mã Khóa học",
           "Tên khóa",
           "Trạng thái",
           "Loại",

@@ -53,7 +53,7 @@ const submit = async ({ type, data }: { type: string; data: ArrayType[] }) => {
   }
 };
 
-const getTotal = async (TrCsCodeSys: string, flag: string) => {
+const getTotal = async (TrCsCodeSys: any, flag: string) => {
   if (flag === "learn") {
     return await api.post("Learn_Course/GetTotalLearn", {
       TrCsCodeSys,

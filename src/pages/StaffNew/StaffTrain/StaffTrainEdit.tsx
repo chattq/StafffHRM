@@ -3,12 +3,14 @@ import ModalStaffEdit from "components/StafffNewDesign/ModalStaffEdit";
 import { Textarea } from "components/input/Textarea";
 import useSelectListRank from "hooks/Select/useSelectListRank";
 import useSelectListStaffType from "hooks/Select/useSelectListStaffType";
+import useSelectTrainCourse from "hooks/Select/useSelectListTrainCourse";
 import useSelectTrainType from "hooks/Select/useSelectTrainType";
 import { useLocalization } from "hooks/useLocalization";
 import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { DatePicker, SelectPicker, Uploader } from "rsuite";
+import Learn_Course_service from "services/Course/Train_Course/Learn_Course_service";
 import Train_Course_service from "services/Course/Train_Course/Train_Course_service";
 import Staff_Appoint_service from "services/Staff/Staff_Appoint_service";
 import Staff_WorkExperience_service from "services/Staff/Staff_WorkExperience_service";
@@ -32,12 +34,13 @@ export default function StaffTrainEdit({
   const [formValue, setFormValue] = useState({} as any);
   const [flagProps, setFlagProps] = useState(flag);
   const listTrainStaff = useSelectTrainType();
-
+  const listCourse = useSelectTrainCourse();
   const listTrainRank = useSelectListRank();
   const _l = useLocalization("ModalStaffEdit");
   const _t = useLocalization("toast");
   const _p = useLocalization("Placeholder");
   const [open, setOpen] = useState(false);
+  const { staffCode } = useParams<string>();
 
   useEffect(() => {
     setFlagProps(flag as string);
@@ -50,7 +53,6 @@ export default function StaffTrainEdit({
     setFormValue({} as any);
     setOpen(false);
   };
-  const { staffCode } = useParams();
   const listFormItem: any[] = [
     {
       label: _l("Từ ngày"), // Th
@@ -77,12 +79,12 @@ export default function StaffTrainEdit({
       required: true,
       control: [
         {
-          data: listTrainStaff,
+          data: listCourse,
           name: "TrCsName",
           placeholder: _p("Nhập"),
           accepter: SelectPicker,
-          labelKey: "TrainTypeName",
-          valueKey: "TrainTypeName",
+          labelKey: "ChapterDesc",
+          valueKey: "TrCsCodeSys",
         },
       ],
     },
@@ -134,10 +136,11 @@ export default function StaffTrainEdit({
         return;
       } else {
         const condition = {
+          StaffCode: staffCode,
           LearnStartDTimeUTC: formValue.LearnStartDTimeUTC
             ? convertDate(formValue.LearnStartDTimeUTC)
             : "",
-          TrCsName: formValue.TrCsName ? formValue.TrCsName : "",
+          TrCsCodeSys: formValue.TrCsName ? formValue.TrCsName : "",
           TrainType: formValue.TrainType ? formValue.TrainType : "",
           RankName: formValue.RankName ? formValue.RankName : "",
           LearnEndDTimeUTC: convertDate(formValue.LearnEndDTimeUTC)
@@ -146,8 +149,7 @@ export default function StaffTrainEdit({
         };
 
         if (flagProps === "update") {
-          console.log(149, condition);
-          Train_Course_service.update({ isNew: true, data: condition }).then(
+          Learn_Course_service.joinToCourse({ Learn_Course: condition }).then(
             (resp: any) => {
               if (resp.Success) {
                 toast.success(_t("Add SuccessFully"));
